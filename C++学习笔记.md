@@ -86,19 +86,173 @@ void bar() {
 
 ### 变量
 
+**作用**：给一段指定的内存空间起名，方便操作这段内存
+
+**语法**：`数据类型 变量名 = 初始值;`
+
+C++在创建变量时，必须给变量一个**初始值**，否则会报错。
+
+```c++
+#include<iostream>
+using namespace std;
+
+int main() {
+	int a = 10;
+	cout << "a = " << a << endl;
+	system("pause");
+	return 0;
+}
+```
+
 ### 常量
+
+**作用**：用于记录程序中不可更改的数据
+
+C++定义常量两种方式：
+
+1. **\#define** 宏常量： `#define 常量名 常量值`
+   * 通常在文件上方定义，表示一个常量
+
+
+2. **const**修饰的变量 `const 数据类型 常量名 = 常量值`
+   * 通常在变量定义前加关键字`const`，修饰该变量为常量，不可修改
+
+```c++
+// 1、宏常量
+#define day 7
+
+int main() {
+	cout << "一周里总共有 " << day << " 天" << endl;
+
+	// 2、const修饰变量
+	const int month = 12;
+	cout << "一年里总共有 " << month << " 个月份" << endl;
+	
+	system("pause");
+
+	return 0;
+}
+```
 
 ### 关键字
 
+**作用：**关键字是C++中预先保留的单词（标识符）
+
+* 在定义变量或者常量时候，不要用关键字
+
+C++关键字如下：
+
+| 关键字       | 含义         | 关键字    | 含义           | 关键字           | 含义           |
+| :----------- | :----------- | :-------- | :------------- | :--------------- | :------------- |
+| asm          | 汇编指令     | auto      | 自动类型推断   | bool             | 布尔类型       |
+| break        | 跳出循环     | case      | 条件分支       | catch            | 异常捕获       |
+| char         | 字符类型     | class     | 类定义         | const            | 常量修饰       |
+| const_cast   | 常量转换     | continue  | 继续循环       | default          | 默认分支       |
+| delete       | 释放内存     | do        | 循环语句       | double           | 双精度浮点类型 |
+| dynamic_cast | 动态类型转换 | else      | 条件分支       | enum             | 枚举类型       |
+| explicit     | 显式构造函数 | export    | 导出模板       | extern           | 外部声明       |
+| false        | 布尔假值     | float     | 单精度浮点类型 | for              | 循环语句       |
+| friend       | 友元声明     | goto      | 跳转语句       | if               | 条件语句       |
+| inline       | 内联函数     | int       | 整型           | long             | 长整型         |
+| mutable      | 可变成员     | namespace | 命名空间       | new              | 动态内存分配   |
+| operator     | 运算符重载   | private   | 私有成员       | protected        | 受保护成员     |
+| public       | 公有成员     | register  | 寄存器变量     | reinterpret_cast | 强制类型转换   |
+| return       | 返回值       | short     | 短整型         | signed           | 有符号类型     |
+| sizeof       | 类型大小     | static    | 静态成员       | static_cast      | 静态类型转换   |
+| struct       | 结构体定义   | switch    | 多分支语句     | template         | 模板定义       |
+| this         | 当前对象指针 | throw     | 抛出异常       | true             | 布尔真值       |
+| try          | 异常捕获     | typedef   | 类型别名       | typeid           | 类型信息       |
+| typename     | 类型名       | union     | 联合体         | unsigned         | 无符号类型     |
+| using        | 命名空间使用 | virtual   | 虚函数         | void             | 无类型         |
+| volatile     | 易变变量     | wchar_t   | 宽字符类型     | while            | 循环语句       |
+
 ### 标识符命名规则
+
+**作用**：C++规定给标识符（变量、常量）命名时，有一套自己的规则
+
+* 标识符不能是关键字
+* 标识符只能由**字母、数字、下划线**组成
+* 第一个字符必须为字母或下划线
+* 标识符中字母区分大小写
 
 ## 数据类型
 
+C++规定在创建一个变量或者常量时，必须要指定出相应的数据类型，否则无法给变量分配内存。
+
 ### 整型
+
+**作用**：整型变量表示的是整数类型的数据
+
+C++中能够表示整型的类型有以下几种方式，区别在于**所占内存空间不同**：
+
+| **数据类型**        | **占用空间**                                    | 取值范围         |
+| ------------------- | ----------------------------------------------- | ---------------- |
+| short(短整型)       | 2字节                                           | [-2^15 ~ 2^15-1] |
+| int(整型)           | 4字节                                           | [-2^31 ~ 2^31-1] |
+| long(长整形)        | Windows为4字节，Linux为4字节(32位)，8字节(64位) | [-2^31 ~ 2^31-1] |
+| long long(长长整形) | 8字节                                           | [-2^63 ~ 2^63-1] |
 
 ### sizeof关键字
 
+**作用：**利用`sizeof`关键字可以统计数据类型所占内存大小
+
+**语法：** `sizeof( 数据类型/变量)`
+
+```C++
+int main() {
+
+	cout << "short 类型所占内存空间为： " << sizeof(short) << endl;
+	cout << "int 类型所占内存空间为： " << sizeof(int) << endl;
+	cout << "long 类型所占内存空间为： " << sizeof(long) << endl;
+	cout << "long long 类型所占内存空间为： " << sizeof(long long) << endl;
+	system("pause");
+
+	return 0;
+}
+```
+
 ### 浮点型
+
+**作用**：用于表示**小数**
+
+浮点型变量分为两种：
+
+1. 单精度浮点型`float`
+2. 双精度浮点型`double`
+
+两者的**区别**在于表示的有效数字范围不同。
+
+| **数据类型** | **占用空间** | **有效数字范围** |
+| ------------ | ------------ | ---------------- |
+| float        | 4字节        | 7位有效数字      |
+| double       | 8字节        | 15～16位有效数字 |
+
+**示例：**
+
+```C++
+int main() {
+
+	float f1 = 3.14f;
+	double d1 = 3.14;
+
+	cout << f1 << endl;
+	cout << d1<< endl;
+
+	cout << "float  sizeof = " << sizeof(f1) << endl;
+	cout << "double sizeof = " << sizeof(d1) << endl;
+
+	//科学计数法
+	float f2 = 3e2; // 3 * 10 ^ 2 
+	cout << "f2 = " << f2 << endl;
+
+	float f3 = 3e-2;  // 3 * 0.1 ^ 2
+	cout << "f3 = " << f3 << endl;
+
+	system("pause");
+
+	return 0;
+}
+```
 
 ### 字符型
 
