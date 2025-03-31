@@ -917,7 +917,48 @@ int main() {
 
 #### continue语句
 
+**作用：**在循环语句中，跳过本次循环中余下尚未执行的语句，继续执行下一次循环。
+
+```cpp
+int main() {
+	for (int i = 0; i < 100; i++)
+	{
+		if (i % 2 == 0)
+		{
+			continue;
+		}
+		cout << i << endl;
+	}
+	
+	system("pause");
+	return 0;
+}
+```
+
 #### goto语句
+
+**作用：**可以无条件跳转语句
+
+**语法：** `goto 标记;`，如果标记的名称存在，执行到goto语句时，会跳转到标记的位置。
+
+```cpp
+int main() {
+	cout << "1" << endl;
+
+	goto FLAG;
+
+	cout << "2" << endl;
+	cout << "3" << endl;
+	cout << "4" << endl;
+
+	FLAG:
+
+	cout << "5" << endl;
+	
+	system("pause");
+	return 0;
+}
+```
 
 ## 数组
 
