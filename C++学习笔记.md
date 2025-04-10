@@ -1113,7 +1113,6 @@ int main() {
 	cout << "二维数组第二个元素地址：" << (int)&arr[0][1] << endl;
 
 	system("pause");
-
 	return 0;
 }
 ```
@@ -1122,18 +1121,203 @@ int main() {
 
 ### 概述
 
+**作用：**将一段经常使用的代码封装起来，减少重复代码。一个较大的程序，一般分为若干个程序块，每个模块实现特定的功能。
+
 ### 函数的定义
+
+**语法：** 
+
+```C++
+返回值类型 函数名 （参数列表）
+{
+       函数体语句
+       return表达式
+}
+```
+
+**示例：**定义一个加法函数，实现两个数相加。
+
+```C++
+int add(int num1, int num2)
+{
+	int sum = num1 + num2;
+	return sum;
+}
+```
 
 ### 函数的调用
 
-### 值传递
+**形参**是函数声明或定义时括号内列出的参数，用于接收外部传入的值，**实参**是调用函数时实际传递给形参的值或变量。
+
+1. 当函数调用时，实参的值会传递给形参。
+2. 实参的类型必须与形参兼容（或可隐式转换）。
+3. 有三种参数传递方式：
+   1. **按值传递**（默认）：形参是实参的副本，修改形参不影响实参。
+   2. **按引用传递**：形参是实参的别名，修改形参会影响实参。
+   3. **按指针传递**：通过地址间接操作实参。
+
+**语法：**` 函数名（参数）`
+
+**示例：**
+
+```C++
+// 函数定义
+int add(int num1, int num2) {
+	int sum = num1 + num2;
+	return sum;
+}
+
+int main() {
+	int a = 10;
+	int b = 10;
+	// 函数调用
+	int sum = add(a, b);
+	cout << "sum = " << sum << endl;
+
+	a = 100;
+	b = 100;
+
+	sum = add(a, b);
+	cout << "sum = " << sum << endl;
+
+	system("pause");
+	return 0;
+}
+```
 
 ### 函数的常见样式
 
+常见的函数样式有4种：
+
+1. 无参无返
+2. 有参无返
+3. 无参有返
+4. 有参有返
+
+**示例：**
+
+```cs
+//1、 无参无返
+void test01()
+{
+	cout << "this is test01" << endl;
+}
+
+//2、 有参无返
+void test02(int a)
+{
+	cout << "this is test02" << endl;
+	cout << "a = " << a << endl;
+}
+
+//3、无参有返
+int test03()
+{
+	cout << "this is test03 " << endl;
+	return 10;
+}
+
+//4、有参有返
+int test04(int a, int b)
+{
+	cout << "this is test04 " << endl;
+	int sum = a + b;
+	return sum;
+}
+```
+
 ### 函数的声明
+
+**作用：**告诉编译器函数的存在。函数的**声明可以多次**，但**定义只能有一次**。部分编译器（如Visual Studio 2022）在函数调用之前必须先找到函数的声明或定义，否则会无法生成。
+
+```csharp
+// 声明
+int max1(int a, int b);
+int max1(int a, int b);
+
+int main() {
+	int a = 100;
+	int b = 200;
+
+	cout << max1(a, b) << endl;
+
+	system("pause");
+	return 0;
+}
+
+// 定义
+int max1(int a, int b)
+{
+	return a > b ? a : b;
+}
+```
 
 ### 函数的分文件编写
 
+**作用：**让代码结构更加清晰。
+
+函数分文件编写一般有4个步骤：
+
+1. 创建后缀名为.h的**头文件**
+2. 创建后缀名为.cpp的**源文件**
+3. 在头文件中写函数的声明
+4. 在源文件中写函数的定义
+
+**示例：**
+
+```C++
+// swap.h文件
+#include<iostream>
+using namespace std;
+
+void swap(int a, int b);
+```
+
+```C++
+// swap.cpp文件
+#include "swap.h"
+void swap(int a, int b)
+{
+	int temp = a;
+	a = b;
+	b = temp;
+
+	cout << "a = " << a << endl;
+	cout << "b = " << b << endl;
+}
+```
+
+```C++
+// main函数文件
+#include "swap.h"
+int main() {
+	int a = 100;
+	int b = 200;
+	swap(a, b);
+
+	system("pause");
+	return 0;
+}
+```
+
 ## 指针
+
+**定义：**指针是一个变量，存储的是另一个变量的**内存地址**（而非值本身）。
+
+**作用：**可以通过指针间接访问内存。
+
+**示例：**
+
+```cpp
+int x = 10;      // 定义一个普通变量
+int *ptr = &x;   // ptr是指针，存储x的地址（&x取地址）
+
+cout << x;       // 输出x的值：10
+cout << &x;      // 输出x的地址（如0x7ffd...）
+cout << ptr;     // 输出ptr存储的地址（即&x）
+cout << *ptr;    // 输出ptr指向的值（即x的值：10）
+```
+
+> `*ptr` 中的 `*` 是**解引用**操作符，表示“取指针指向的值”。
 
 ## 结构体
