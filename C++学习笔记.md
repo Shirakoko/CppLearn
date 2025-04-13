@@ -1405,18 +1405,18 @@ int main() {
 	int a = 10;
 	int b = 10;
 
-	//const修饰的是指针，指针指向可以改，指针指向的值不可以更改
+	// const修饰的是指针，指针指向可以改，指针指向的值不可以更改
 	const int* p1 = &a;
 	p1 = &b; // 正确
 	//*p1 = 100; 错误
 
 
-	//const修饰的是常量，指针指向不可以改，指针指向的值可以更改
+	// const修饰的是常量，指针指向不可以改，指针指向的值可以更改
 	int* const p2 = &a;
 	//p2 = &b; 错误
 	*p2 = 100; // 正确
 
-	//const既修饰指针又修饰常量
+	// const既修饰指针又修饰常量
 	const int* const p3 = &a;
 	//p3 = &b; // 错误
 	//*p3 = 100; // 错误
@@ -1505,12 +1505,294 @@ int main() {
 
 ### 定义和使用
 
-结构体是用户**自定义的数据类型**，允许用户存储不同的数据类型
+**定义：**结构体是**用户自定义**的复合数据类型，用于将不同类型的数据组合成一个逻辑单元。
+
+通过结构体创建变量的方式有三种：
+
+* struct 结构体名 变量名
+* struct 结构体名 变量名 = { 成员1值 ， 成员2值...}
+* 定义结构体时顺便创建变量
+
+**示例：**
+
+```cpp
+// 定义
+struct Person{
+	string name;
+	int age;
+	float height;
+}p3; // 声明
+
+int main() {
+	Person p1 = { "Alice", 25, 1.65f }; // 声明
+	Person p2; // 声明
+	p2.name = "Bob";
+	p2.age = 30;
+
+	p3.name = "Mike";
+	p3.age = 40;
+	p3.height = 1.70f;
+
+	cout << " name: " << p1.name << " age: " << p1.age << " height: " << p1.height << endl;
+	cout << " name: " << p2.name << " age: " << p2.age << " height: " << p2.height << endl;
+	cout << " name: " << p3.name << " age: " << p3.age << " height: " << p3.height << endl;
+
+	system("pause");
+	return 0;
+}
+```
 
 ### 结构体数组
 
+**作用：**结构体数组是存储多个相同结构体类型数据的集合，适合管理一组具有相同属性的数据（如学生信息、坐标点等）。
+
+**示例：**
+
+```cpp
+int main() {
+	Student students_1[3];
+	students_1[0] = { "Alice", 10 };
+	students_1[1] = { "Bob", 11 };
+	students_1[2] = { "Charlie", 12 };
+
+
+	Student students_2[3] = {
+		{"Alice", 20},
+		{"Bob", 21},
+		{"Charlie", 22}
+	};
+
+	Student students_3[3] = { {"Alice"}, {"Bob", 31} };
+
+	for (int i = 0; i < 3; i++) {
+		cout << "Name: " << students_1[i].name
+			<< ", Score: " << students_1[i].score << endl;
+	}
+
+	cout << '\n' << endl;
+
+	for (int i = 0; i < 3; i++) {
+		cout << "Name: " << students_2[i].name
+			<< ", Score: " << students_2[i].score << endl;
+	}
+
+	cout << '\n' << endl;
+
+	for (int i = 0; i < 3; i++) {
+		cout << "Name: " << students_3[i].name
+			<< ", Score: " << students_3[i].score << endl;
+	}
+
+	system("pause");
+	return 0;
+}
+```
+
 ### 结构体指针
+
+**作用：**通过指针访问结构体中的成员，利用操作符 `-> `可以通过结构体指针访问结构体属性。
+
+**示例：**
+
+```cpp
+struct Student {
+	string name;
+	int score;
+};
+
+int main() {
+	Student student = { "Charlie", 78 };
+	Student students[3] = {
+		{"Alice", 90},
+		{"Bob", 85},
+	};
+
+	Student* ptr1 = &student; // 指向结构体对象student
+	cout << "Name: " << ptr1->name
+		<< ", Score: " << ptr1->score << endl;
+
+	Student* ptr2 = students; // 指向数组首元素
+	cout << "Name: " << ptr2->name
+		<< ", Score: " << ptr2->score << endl;
+
+	ptr2++; // 移动到数组下一个元素
+	cout << "Name: " << ptr2->name
+		<< ", Score: " << ptr2->score << endl;
+
+	system("pause");
+	return 0;
+}
+```
 
 ### 嵌套结构体
 
+**定义：**嵌套结构体是指在一个结构体内部定义另一个结构体，用于构建更复杂的数据结构，嵌套结构体有两种定义方式：
+
+1. 内部定义嵌套结构体
+
+   ```cpp
+   struct Outer {
+       int outerData;
+       
+       struct Inner {  // 内部定义的结构体
+           int innerData;
+       };
+       
+       Inner innerObj; // 嵌套结构体成员
+   };
+   ```
+
+2. 外部定义嵌套结构体
+
+   ```cpp
+   struct Inner {  // 先定义内部结构体
+       int innerData;
+   };
+   
+   struct Outer {
+       int outerData;
+       Inner innerObj;  // 使用已定义的结构体
+   };
+   ```
+
+**访问：**通过多级`.`运算符可访问内部结构体成员。
+
+```cpp
+int main() {
+	Outer outer;
+	outer.outerData = 10;
+	outer.innerObj.innerData = 20;  // 通过.运算符访问嵌套成员
+
+	system("pause");
+	return 0;
+}
+```
+
+**初始化：**有嵌套初始化和分段初始化两种方式。
+
+```cpp
+Outer outer = {10, {20}};
+```
+
+```cpp
+Outer outer;
+outer.outerData = 10;
+outer.innerObj.innerData = 20;
+```
+
+**指针：**嵌套结构体也可通过指针访问嵌套成员。
+
+```cpp
+Outer outer;
+Outer* ptr = &outer;
+ptr->innerObj.innerData = 30;  // 通过指针访问嵌套成员
+```
+
 ### 作为函数参数
+
+结构体作为函数参数有3中传递方式：
+
+1. 传值：创建结构体的完整**副本**，函数内修改**不影响**原结构体
+
+   ```cpp
+   struct Point {
+   	int x;
+   	int y;
+   };
+   
+   void printPoint(Point p) {
+   	p.x += 1;
+   	cout << "Copy: (" << p.x << ", " << p.y << ")" << endl;
+   }
+   int main() {
+   	Point p = { 10, 20 };
+   	printPoint(p); // Copy: (11, 20)
+   	cout << p.x << endl; // 10
+   }
+   ```
+
+2. 传引用：直接操作原结构体，无复制开销
+
+   ```cpp
+   struct Point {
+   	int x;
+   	int y;
+   };
+   
+   void movePoint(Point& p, int dx, int dy) {
+   	p.x += dx;
+   	p.y += dy;
+   }
+   
+   int main() {
+   	Point p = { 10, 20 };
+   	movePoint(p, 5, -5);
+   	cout << "(" << p.x << ", " << p.y << ")" << endl; // (15, 15)
+   }
+   ```
+
+   也可传常量引用防止意外修改：
+
+   ```cpp
+   struct Student {
+       string name;
+       int scores[3];
+   };
+   
+   void displayStudent(const Student& s) {
+       cout << s.name << "'s scores: ";
+       for (int score : s.scores) { // 只能读取，不能修改
+           cout << score << " ";
+       }
+       cout << endl;
+   }
+   
+   int main() {
+       Student stu = { "Alice", {90, 85, 88} };
+       displayStudent(stu); // 安全高效地访问
+   }
+   ```
+
+3. 传指针：显式传递地址
+
+   ```cpp
+   struct Point {
+       int x;
+       int y;
+   };
+   
+   void scalePoint(Point* p, float factor) {
+       if (p != nullptr) {
+           p->x *= factor;
+           p->y *= factor;
+       }
+   }
+   
+   int main() {
+       Point p = { 10, 20 };
+       scalePoint(&p, 1.5f); // 传递地址
+       cout << "(" << p.x << ", " << p.y << ")" << endl; // (15, 30)
+   }
+   ```
+
+   也可传常量指针防止意外修改：
+
+   ```cpp
+   struct Point {
+       int x;
+       int y;
+   };
+   
+   void printPoint(const Point* p) {
+       cout << "(" << p->x << ", " << p->y << ")" << endl;
+       return;
+   }
+   
+   int main() {
+       Point p = { 10, 20 };
+       printPoint(&p); // 传递地址
+   }
+   ```
+
+## 程序内存模型
+
