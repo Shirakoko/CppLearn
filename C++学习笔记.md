@@ -1857,14 +1857,14 @@ int main() {
   - 注意：**不要返回局部变量的地址**，栈区开辟的数据由编译器自动释放
 
   ```cpp
-  int * func()
+  int* func()
   {
   	int a = 10;
   	return &a;
   }
   
   int main() {
-  	int *p = func();
+  	int* p = func();
   
   	cout << *p << endl; // 第一次能打印正确数字，因为编译器做了保留
   	cout << *p << endl; // 第二次无法打印正确数字（x86架构），因为栈区数据释放
@@ -1882,7 +1882,7 @@ int main() {
   ```cpp
   int* func()
   {
-  	int* a = new int(10);
+  	int* a = new int(10); // 利用new关键字将数据开辟到堆区
   	return a;
   }
   
