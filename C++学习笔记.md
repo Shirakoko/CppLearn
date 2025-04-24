@@ -2012,13 +2012,32 @@ int main() {
 引用在行为逻辑上等价于**指针常量**，且大多数编译器将引用底层实现为指针常量。
 
 ```cpp
-//发现是引用，转换为 int* const ref = &a;
+// 编译器发现是引用，转换为 int* const ref = &a;
 void func(int& ref){
-	ref = 100; // ref是引用，转换为*ref = 100
+	ref = 100; // 转换为*ref = 100
 }
 ```
 
 ### 常量引用
+
+**作用：**常量引用修饰函数形参，可以防止函数内部对实参进行修改。
+
+**示例：**
+
+```cpp
+void showValue(const int& v) {
+	// v += 10; 表达式必须是可修改的左值
+	cout << v << endl;
+}
+
+int main() {
+	int a = 10;
+	showValue(a);
+
+	system("pause");
+	return 0;
+}
+```
 
 ## 函数重载
 
