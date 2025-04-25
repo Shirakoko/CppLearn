@@ -2039,7 +2039,90 @@ int main() {
 }
 ```
 
-## 函数重载
+## 函数默认参数
+
+**定义：**函数的形参列表中的参数可以有默认值，函数的**声明和实现中只能有一个有默认参数**，否则会有**”二义性“**
+
+**语法：**`返回值类型  函数名 （参数= 默认值）{}`
+
+**示例：**
+
+```cpp
+int func1(int a, int b = 10, int c = 10) {
+	return a + b + c;
+}
+
+// 如果函数声明有默认参数，实现时就不能有默认参数，否则运行会报“重定义默认参数”
+int func2(int a = 10, int b = 10);
+int func2(int a, int b) {
+	return a + b;
+}
+
+int main() {
+	cout << "ret = " << func1(20, 20) << endl; // ret = 50
+	cout << "ret = " << func2(100) << endl; // ret = 110
+
+	system("pause");
+	return 0;
+}
+```
+
+### 函数占位参数
+
+**定义：**函数的形参列表中可以有占位参数，占位参数**省略参数名**，调用函数时必须填补该位置（除非占位参数有默认参数）
+
+**示例：**
+
+```cpp
+void func(int a, int = 10) {
+	cout << "this is a func" << endl;
+}
+
+int main() {
+	func(10);
+
+	system("pause");
+	return 0;
+}
+```
+
+### 函数重载
+
+定义：**同一作用域**下，函数名相同，参数不同（**类型、个数**或**顺序**不同）的一组函数。
+
+```cpp
+void func()
+{
+	cout << "func 的调用" << endl;
+}
+void func(int a)
+{
+	cout << "func (int a) 的调用" << endl;
+}
+void func(double a)
+{
+	cout << "func (double a)的调用" << endl;
+}
+void func(int a, double b)
+{
+	cout << "func (int a ,double b) 的调用" << endl;
+}
+void func(double a, int b)
+{
+	cout << "func (double a ,int b)的调用" << endl;
+}
+
+int main() {
+	func();
+	func(10);
+	func(3.14);
+	func(10, 3.14);
+	func(3.14, 10);
+
+	system("pause");
+	return 0;
+}
+```
 
 ## 类和对象
 
