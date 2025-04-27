@@ -2124,5 +2124,46 @@ int main() {
 }
 ```
 
+引用可作为重载条件：
+
+```cpp
+void func(int &a) {
+	cout << "func (int &a) 调用" << endl;
+}
+
+void func(const int &a) {
+	cout << "func (const int &a) 调用" << endl;
+}
+
+int main() {
+	int a = 10;
+	func(a); // func (int &a) 调用
+	func(10); // func (const int &a) 调用
+
+	system("pause");
+	return 0;
+}
+```
+
+函数重载有默认参数，调用时不得有歧义：
+
+```cpp
+void func(int a, int b = 10) {
+    cout << "func2(int a, int b = 10) 调用" << endl;
+}
+
+void func(int a) {
+    cout << "func2(int a) 调用" << endl;
+}
+
+int main() {
+    // func(10); 编译报错：有多个重载参数"func"实例于参数列表匹配
+    func(10, 20);
+
+    system("pause");
+    return 0;
+}
+```
+
 ## 类和对象
 
