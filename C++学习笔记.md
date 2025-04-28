@@ -2167,3 +2167,45 @@ int main() {
 
 ## 类和对象
 
+面向对象三大特征：封装、继承、多态。
+
+- **封装（Encapsulation）**：将属性和操作数据的方法（行为）捆绑为一个独立的单元（类），并隐藏内部实现细节，仅通过可控的接口与外界交互。
+- **继承（Inheritance）**：子类继承父类的属性和方法，并可扩展或重写父类的功能。
+- **多态（Polymorphism）**：同一操作作用于不同对象时，可产生不同的行为，如方法**重写**和**接口/抽象类**。
+
+### 封装
+
+**作用：**
+
+* 将属性和行为作为一个整体
+* 将属性和行为加以权限控制
+
+**语法：** `class 类名{   访问权限： 属性  / 行为  };`
+
+**示例：**
+
+```cpp
+const double PI = 3.14;
+class Circle
+{
+public:
+	int m_r;
+	double GetPerimeter()
+	{
+		return 2 * PI * m_r;
+	}
+};
+
+int main() {
+	Circle c1;
+	c1.m_r = 10;
+	cout << "圆的周长为: " << c1.GetPerimeter() << endl;
+
+	system("pause");
+	return 0;
+}
+```
+
+### 继承
+
+### 多态
