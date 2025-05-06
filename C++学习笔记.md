@@ -2206,6 +2206,87 @@ int main() {
 }
 ```
 
+**访问修饰符：**
+
+类在设计时，可以把属性和行为放在不同的权限下，访问权限有三种：
+
+1. public：公共权限 ，类内可以访问，类外可以访问
+2. protected：保护权限，类内和子类可以访问，类外不可访问
+3. private：私有权限，类内可以访问，类外不可访问
+
+**示例：**
+
+```cpp
+class Person
+{
+public:
+	string m_Name;
+protected:
+	string m_Car;
+private:
+	int m_PassWord;
+public:
+	void Func()
+	{
+		m_Name = "Mike";
+		m_Car = "BWM";
+		m_PassWord = 123456;
+	}
+};
+
+class Teacher: public Person {
+public:
+	void Func()
+	{
+		m_Name = "Tina";
+		m_Car = "Avatar";
+		//m_PassWord = 000000; 不可访问
+	}
+};
+
+int main() {
+	Person p;
+	p.m_Name = "Alice";
+	//p.m_Car = "Auto"; 不可访问
+	//p.m_PassWord = 123456; 不可访问
+
+	system("pause");
+	return 0;
+};
+```
+
+**struct和class的区别：**
+
+在C++中，`struct` 和 `class` 的**核心区别在于默认的成员访问权限和继承权限**，但它们的底层能力几乎完全相同。
+
+- `struct`的成员默认权限为`public`
+- `class`的成员默认权限为`private`
+
+**示例：**
+
+```cpp
+class C1
+{
+	int  m_A; // 默认是private
+};
+
+struct C2
+{
+	int m_A;  // 默认是public
+};
+
+int main() {
+	C1 c1;
+	//c1.m_A = 10; 没有访问权限
+
+	C2 c2;
+	c2.m_A = 10;
+
+	system("pause");
+	return 0;
+}
+```
+
 ### 继承
 
 ### 多态
