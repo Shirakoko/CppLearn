@@ -2299,48 +2299,176 @@ public:
 **特点：**
 
 1. 参数必须是对**同类对象**的**常量引用**（`const T&`）
-2. 如果没有显式定义，编辑器会自动生成一个默认拷贝构造函数，执行**浅拷贝**
+2. 如果没有显式定义，编译器会自动生成一个**默认拷贝构造函数**，执行**浅拷贝**
 
 ```cpp
-class String {
-private:
-    char* data;
-    size_t length;
-    
+class Person {
 public:
-    // 普通构造函数
-    String(const char* str = "") {
-        length = strlen(str);
-        data = new char[length + 1];
-        strcpy(data, str);
-    }
-    
-    // 拷贝构造函数
-    String(const String& other) {
-        length = other.length;
-        data = new char[length + 1];
-        strcpy(data, other.data);
-    }
-    
-    ~String() {
-        delete[] data;
-    }
-    
-    void print() {
-        std::cout << data << std::endl;
+    int m_Age;
+    char* m_Name;
+
+    Person(int age, const char* name) {
+        cout << "有参构造函数" << endl;
+        m_Age = age;
+        m_Name = new char[strlen(name) + 1]; // C风格字符串末尾是'\0'
+        strcpy_s(m_Name, strlen(name) + 1,  name);
     }
 };
 
 int main() {
-    String s1("Hello");
-    String s2 = s1;  // 调用拷贝构造函数
-    
-    s1.print();  // 输出: Hello
-    s2.print();  // 输出: Hello
-    
+	Person p1(100, "Alice"); // 调用有参构造函数，打印“有参构造函数”
+	Person p2 = p1; // 调用 Person 默认的拷贝构造函数
+
+    cout << "p1的m_Name地址: " << &p1.m_Name << endl;
+    cout << "p2的m_Name地址: " << &p2.m_Name << endl;
+
+	cout << "p2的m_Age: " << p2.m_Age << endl; // 100
+
+    strcpy_s(p2.m_Name, strlen("Bob") + 1, "Bob");
+    cout << "p1.m_Name: " << p1.m_Name << endl; // Bob
+
+	system("pause");
+	return 0;
+}
+```
+
+用拷贝构造函数初始化对象有三种调用方式：
+
+1. `Person p2 = p1;`：拷贝初始化，不会生成临时对象
+2. `Person p2(p1);` ：直接初始化，不会生成临时对象
+3. `Person p2 = Person(p1);` 显示构造+拷贝初始化，会产生临时匿名对象
+
+```cpp
+class Person {
+public:
+    int m_Age;
+
+    Person(int age) {
+        cout << "有参构造函数" << endl;
+        m_Age = age;
+    }
+
+    ~Person() {
+        cout << "析构函数" << endl;
+    }
+};
+
+int main() {
+    Person p1(100); // 调用有参构造函数，打印“有参构造函数”
+    Person p2 = p1; // 拷贝初始化，不会生成临时对象
+    Person p3(p1); // 直接初始化，不会生成临时对象，等价于拷贝初始化
+    Person p4 = Person(p1); // 显示构造+拷贝初始化，会产生临时匿名对象，匿名对象释放前打印“析构函数”
+
+    system("pause");
     return 0;
 }
 ```
+
+RVO/NRVO优化：在函数返回一个**临时对象**时，直接将该对象构造到调用者的目标内存中，**跳过拷贝/移动操作**。
+
+- RVO（返回值优化）：当函数返回一个**匿名**临时对象时，编译器直接在调用者的栈帧上构造该对象，避免拷贝临时对象。
+- NRVO（具名返回值优化）：当函数返回一个**具名**临时对象时，编译器尝试将该对象直接构造在调用者的栈帧上，避免拷贝临时对象。
+
+```cpp
+struct Test {
+    Test() { cout << "构造函数\n"; }
+    Test(const Test&) { cout << "拷贝构造\n"; }
+    ~Test() { cout << "析构函数\n"; }
+};
+
+Test createTest() {
+    return Test(); // RVO
+}
+
+Test createNamedTest() {
+    Test t;
+    return t; // NRVO
+}
+
+
+int main() {
+    Test t1 = createTest(); // 打印"构造函数", 不打印"析构函数"，RVO生效
+    Test t2 = createNamedTest(); // 打印"构造函数"，不打印"析构函数"，NRVO生效
+    Test t3 = Test(t1); // 打印"拷贝构造", 不打印"析构函数"，RVO生效
+
+    system("pause");
+    return 0;
+}
+```
+
+是否手动实现拷贝构造函数对RVO生效的影响：
+
+|        情况        | 是否定义拷贝构造函数？ | `Person p2 = Person(p1);` 是否打印额外析构？ |
+| :----------------: | :--------------------: | :------------------------------------------: |
+| **未定义拷贝构造** |           否           |         是（调用临时对象的析构函数）         |
+|  **定义拷贝构造**  |           是           |            否（优化跳过临时对象）            |
+
+未定义拷贝构造函数，不会进行RVO/NRVO优化：
+
+```cpp
+class Person {
+public:
+    int m_Age;
+
+    Person(int age) {
+        m_Age = age;
+    }
+
+    //Person(const Person& p) {
+    //    m_Age = p.m_Age;
+    //}
+
+    ~Person() {
+        cout << "析构函数" << endl;
+    }
+};
+
+int main() {
+    Person p1(100);
+    Person p2 = Person(p1); // 打印“析构函数”
+
+    system("pause");
+    return 0;
+}
+```
+
+手动实现了拷贝构造函数，编译器会认为这是一个 **“非平凡（non-trivial）”操作**，会进行RVO/NRVO优化：
+
+```cpp
+class Person {
+public:
+    int m_Age;
+
+    Person(int age) {
+        m_Age = age;
+    }
+
+    Person(const Person& p) {
+        m_Age = p.m_Age;
+    }
+
+    ~Person() {
+        cout << "析构函数" << endl;
+    }
+};
+
+int main() {
+    Person p1(100);
+    Person p2 = Person(p1); // 不打印“析构函数”
+
+    system("pause");
+    return 0;
+}
+```
+
+**根本原因：**RVO生效的条件是**拷贝/移动构造函数必须是可被忽略的（trivial或未观察到副作用）**
+
+- 当**未显式定义**拷贝构造函数时，编译器生成的默认拷贝构造函数是`trivial`（平凡的）
+  - `trivial` 拷贝构造的行为是逐字节复制，编译器可以自由优化（包括完全省略拷贝）
+  - 此时 `Person(p1)` 会被视为一个临时对象，触发析构
+- 当**显式定义**拷贝构造函数时：
+  - 拷贝构造函数变为`non-trivial`（因为用户定义了行为）
+  - 编译器认为拷贝构造有副作用（如代码中的打印逻辑），**必须保留拷贝语义**，因此直接优化为在 `p2` 的地址构造（RVO生效）
 
 ### 继承
 
