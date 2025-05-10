@@ -2504,7 +2504,71 @@ int main() {
 
 #### 深拷贝和浅拷贝
 
+- 当类内包含指针成员且管理动态分配的内存时，若未自定义拷贝构造函数而使用编译器的默认拷贝构造函数，会导致**浅拷贝（Shallow Copy）**问题，进而可能引发**重复释放同一块堆内存**的未定义行为
 
+- 自定义拷贝构造函数的本质是**确保每个对象拥有独立的资源副本**，避免多个对象共享同一资源导致的重复释放或数据竞争
+
+
+#### 初始化列表
+
+**作用：**C++提供了初始化列表语法，用来初始化属性
+
+**语法：**`构造函数()：属性1(值1),属性2（值2）... {}`
+
+```cpp
+class Person {
+public:
+	Person(int a, int b, int c) :m_A(a), m_B(b), m_C(c) {}
+	void PrintPerson() {
+		cout << "m_A:" << m_A << endl;
+		cout << "m_B:" << m_B << endl;
+		cout << "m_C:" << m_C << endl;
+	}
+private:
+	int m_A;
+	int m_B;
+	int m_C;
+};
+
+int main() {
+	Person p(1, 2, 3);
+	p.PrintPerson();
+
+	system("pause");
+	return 0;
+}
+```
+
+#### 类作为类成员
+
+- 按照成员在类中的**声明顺序（与初始化列表的顺序无关）**，先调用所有成员对象的构造函数。
+- 在所有成员对象构造完成后，**再执行本类的构造函数**。
+
+```cpp
+class Member {
+public:
+    Member(int id) { cout << "Member " << id << " constructed" << endl; }
+};
+
+class MyClass {
+    Member m1;
+    Member m2;
+public:
+    MyClass() : m2(2), m1(1) {
+        cout << "MyClass constructed" << endl;
+    }
+};
+
+int main() {
+    MyClass obj;
+    // Member 1 constructed  m1 先构造（声明顺序优先）
+	// Member 2 constructed  m2 后构造
+	// MyClass constructed   最后调用本类的构造函数
+    
+    system("pause");
+	return 0;
+}
+```
 
 ### 继承
 
