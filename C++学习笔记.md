@@ -2543,6 +2543,7 @@ int main() {
 
 - 按照成员在类中的**声明顺序（与初始化列表的顺序无关）**，先调用所有成员对象的构造函数。
 - 在所有成员对象构造完成后，**再执行本类的构造函数**。
+- 析构函数的调用顺序与构造函数的调用顺序**完全相反**，遵循“**后构造的对象先析构**”的原则（即栈的“后进先出”）
 
 ```cpp
 class Member {
@@ -2564,6 +2565,41 @@ int main() {
     // Member 1 constructed  m1 先构造（声明顺序优先）
 	// Member 2 constructed  m2 后构造
 	// MyClass constructed   最后调用本类的构造函数
+    
+    system("pause");
+	return 0;
+}
+```
+
+#### 静态成员
+
+**定义：**静态成员就是在成员变量和成员函数前加上关键字`static`
+
+- 静态成员变量：
+  - 共享性：所有类对象共享**同一份**静态成员变量（储存在**全局区**）
+  - 初始化：类内声明，**类外初始化**
+  - 不依赖对象：即使没有创建对象，静态成员变量也存在（编译阶段就分配内存）
+- 静态成员函数：
+  - 共享性：所有类对象共享同一个函数
+  - 访问对象：只能访问**静态成员变量**或其他**静态成员函数**
+  - 不依赖对象：通过类名直接调用，无需创建对象
+
+```cpp
+class MyClass {
+public:
+    static void printCount() {
+        cout << "Count: " << count; // 只能访问静态成员
+    }
+    static int count; // 类内声明
+};
+int MyClass::count = 0; // 类外初始化
+
+int main() {
+    MyClass::printCount(); // Count: 0
+    MyClass c;
+    c.count = 1; // 也可用类名访问静态成员变量，MyClass::count = 1
+    
+    MyClass::printCount(); // Cout: 1
     
     system("pause");
 	return 0;
