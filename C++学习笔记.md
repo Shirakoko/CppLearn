@@ -2599,7 +2599,7 @@ int main() {
     MyClass c;
     c.count = 1; // 也可用类名访问静态成员变量，MyClass::count = 1
     
-    MyClass::printCount(); // Cout: 1
+    c.printCount(); // Cout: 1
     
     system("pause");
 	return 0;
