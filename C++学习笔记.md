@@ -2712,6 +2712,109 @@ int main() {
 
 #### 友元
 
+友元是一种机制，允许外部实体访问当前类的**私有（private）和受保护（protected）成员**。友元破坏了封装性，但能提供更高的灵活性。有三种类型的成员可以作为友元：
+
+- **友元全局函数**
+
+  - **作用**：允许一个**全局函数**访问类的私有或受保护成员
+  - **语法**：在类内部用 `friend` 声明全局函数
+
+  ```cpp
+  class Box {
+  private:
+      int width;
+  
+  public:
+      Box(int w) : width(w) {}
+  
+      // 声明全局函数为友元
+      friend void printWidth(Box box);
+  };
+  
+  // 全局函数定义
+  void printWidth(Box box) {
+      // 可以访问私有成员 width
+      cout << "Box width: " << box.width << endl;
+  }
+  
+  int main() {
+      Box box(10);
+      printWidth(box); // 输出: Box width: 10
+      return 0;
+  }
+  ```
+
+- **友元类**
+
+  - **作用**：允许另一个类的**所有成员函数**访问当前类的私有或受保护成员
+  - **语法**：在类内部用 `friend class` 声明友元类
+
+  ```cpp
+  class Box {
+  private:
+      int width;
+  
+  public:
+      Box(int w) : width(w) {}
+  
+      // 声明 Printer 类为友元
+      friend class Printer;
+  };
+  
+  class Printer {
+  public:
+      void printWidth(Box box) {
+          // Printer 的成员函数可以访问 Box 的私有成员
+          cout << "Box width: " << box.width << endl;
+      }
+  };
+  
+  int main() {
+      Box box(20);
+      Printer printer;
+      printer.printWidth(box); // 输出: Box width: 20
+      return 0;
+  }
+  ```
+
+- **友元成员函数**
+
+  - **作用**：允许另一个类的**特定成员函数**访问当前类的私有或受保护成员
+  - **语法：**在类内部用 `friend` 声明其他类的成员函数
+
+  ```cpp
+  class Box; // 前向声明
+  class Printer {
+  public:
+      void printWidth(Box box);
+  };
+  
+  class Box {
+  private:
+      int width;
+  
+  public:
+      Box(int w) : width(w) {}
+  
+      // 声明 Printer 类的成员函数为友元
+      friend void Printer::printWidth(Box box);
+  };
+  
+  // Printer 成员函数的定义（需要 Box 的完整定义）
+  void Printer::printWidth(Box box) {
+      cout << "Box width: " << box.width << endl; // 可以访问 Box 类的私有成员
+  }
+  
+  int main() {
+      Box box(30);
+      Printer printer;
+      printer.printWidth(box); // 输出: Box width: 30
+      return 0;
+  }
+  ```
+
+#### 运算符重载
+
 
 
 ### 继承
