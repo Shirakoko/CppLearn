@@ -2835,6 +2835,10 @@ public:
         return Vector2D(x + other.x, y + other.y);
     }
 
+    Vector2D operator+(double scalar) const {
+        return Vector2D(x + scalar, y + scalar);
+    }
+
     // 2. 减号运算符重载 (向量相减)
     Vector2D operator-(const Vector2D& other) const {
         return Vector2D(x - other.x, y - other.y);
@@ -2853,7 +2857,7 @@ public:
         return *this;
     }
 
-    // 4. 递增运算符重载 (后缀++)，返回递增之前的值
+    // 4. 递增运算符重载 (后缀++)，返回递增之前的值，int是占位参数，编译器认为是后置递增
     Vector2D operator++(int) {
         Vector2D temp = *this;
         ++(*this); // 调用前缀++
@@ -2867,7 +2871,7 @@ public:
         return *this;
     }
 
-    // 4. 递减运算符重载 (后缀--)，返回递增之前的值
+    // 4. 递减运算符重载 (后缀--)，返回递增之前的值，int是占位参数，编译器认为是后置递减
     Vector2D operator--(int) {
         Vector2D temp = *this;
         --(*this); // 调用前缀--
@@ -2918,6 +2922,9 @@ int main() {
     Vector2D sum = v1 + v2;
     std::cout << "v1 + v2 = " << sum << std::endl; // 输出 (4, 6)
 
+    Vector2D sum2 = v1 + 100;
+    std::cout << "v1 + 100 = " << sum2 << std::endl; // 输出 (4, 6)
+
     // 2. 减号运算符
     Vector2D diff = v1 - v2;
     std::cout << "v1 - v2 = " << diff << std::endl; // 输出 (2, 2)
@@ -2941,6 +2948,7 @@ int main() {
     std::cout << "v1 < v2? " << (v1 < v2) << std::endl;   // 0 (false)
     std::cout << "v1 > v2? " << (v1 > v2) << std::endl;   // 1 (true)
 
+    system("pause");
     return 0;
 }
 ```
