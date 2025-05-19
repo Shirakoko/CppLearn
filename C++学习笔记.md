@@ -2815,7 +2815,135 @@ int main() {
 
 #### 运算符重载
 
+**定义：**一种特殊的函数重载，通过定义名为`operator@`的函数（`@`代表要重载的运算符），来指定该运算符在自定义类型上的行为。
 
+```cpp
+class Vector2D {
+private:
+    double x, y;
+
+public:
+    // 构造函数
+    Vector2D(double x = 0, double y = 0) : x(x), y(y) {}
+
+    // 获取坐标
+    double getX() const { return x; }
+    double getY() const { return y; }
+
+    // 1. 加号运算符重载 (向量相加)
+    Vector2D operator+(const Vector2D& other) const {
+        return Vector2D(x + other.x, y + other.y);
+    }
+
+    // 2. 减号运算符重载 (向量相减)
+    Vector2D operator-(const Vector2D& other) const {
+        return Vector2D(x - other.x, y - other.y);
+    }
+
+    // 3. 左移运算符重载 (用于输出)
+    friend ostream& operator<<(ostream& os, const Vector2D& vec) {
+        os << "(" << vec.x << ", " << vec.y << ")";
+        return os;
+    }
+
+    // 4. 递增运算符重载 (前缀++)
+    Vector2D& operator++() {
+        ++x;
+        ++y;
+        return *this;
+    }
+
+    // 4. 递增运算符重载 (后缀++)，返回递增之前的值
+    Vector2D operator++(int) {
+        Vector2D temp = *this;
+        ++(*this); // 调用前缀++
+        return temp;
+    }
+
+    // 4. 递减运算符重载 (前缀--)
+    Vector2D& operator--() {
+        --x;
+        --y;
+        return *this;
+    }
+
+    // 4. 递减运算符重载 (后缀--)，返回递增之前的值
+    Vector2D operator--(int) {
+        Vector2D temp = *this;
+        --(*this); // 调用前缀--
+        return temp;
+    }
+
+    // 5. 赋值运算符重载
+    Vector2D& operator=(const Vector2D& other) {
+        if (this != &other) { // 防止自赋值
+            x = other.x;
+            y = other.y;
+        }
+        return *this;
+    }
+
+    // 6. 关系运算符重载
+    bool operator==(const Vector2D& other) const {
+        return (x == other.x) && (y == other.y);
+    }
+
+    bool operator!=(const Vector2D& other) const {
+        return !(*this == other);
+    }
+
+    // 向量长度比较
+    bool operator<(const Vector2D& other) const {
+        return (x * x + y * y) < (other.x * other.x + other.y * other.y);
+    }
+
+    bool operator>(const Vector2D& other) const {
+        return other < *this;
+    }
+
+    bool operator<=(const Vector2D& other) const {
+        return !(*this > other);
+    }
+
+    bool operator>=(const Vector2D& other) const {
+        return !(*this < other);
+    }
+};
+
+int main() {
+    Vector2D v1(3, 4);
+    Vector2D v2(1, 2);
+
+    // 1. 加号运算符
+    Vector2D sum = v1 + v2;
+    std::cout << "v1 + v2 = " << sum << std::endl; // 输出 (4, 6)
+
+    // 2. 减号运算符
+    Vector2D diff = v1 - v2;
+    std::cout << "v1 - v2 = " << diff << std::endl; // 输出 (2, 2)
+
+    // 3. 左移运算符
+    std::cout << "v1: " << v1 << ", v2: " << v2 << std::endl;
+
+    // 4. 递增运算符
+    Vector2D v3 = v1;
+    std::cout << "v3++ = " << v3++ << ", now v3 = " << v3 << std::endl;
+    std::cout << "++v3 = " << ++v3 << std::endl;
+
+    // 5. 赋值运算符
+    Vector2D v4;
+    v4 = v1;
+    std::cout << "v4 = " << v4 << std::endl;
+
+    // 6. 关系运算符
+    std::cout << "v1 == v2? " << (v1 == v2) << std::endl; // 0 (false)
+    std::cout << "v1 != v2? " << (v1 != v2) << std::endl; // 1 (true)
+    std::cout << "v1 < v2? " << (v1 < v2) << std::endl;   // 0 (false)
+    std::cout << "v1 > v2? " << (v1 > v2) << std::endl;   // 1 (true)
+
+    return 0;
+}
+```
 
 ### 继承
 
