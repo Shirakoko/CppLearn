@@ -2975,7 +2975,32 @@ int main() {
 
 **定义：**继承是指一个类（派生类/子类）可以继承另一个类（基类/父类）的属性和方法，同时可以添加自己的新特性。
 
-#### 访问控制
+**语法：**
+
+```cpp
+class BaseClass {
+    // 基类成员
+};
+
+class DerivedClass : 访问控制符 BaseClass {
+    // 派生类成员
+};
+```
+
+#### 继承方式
+
+C++中有三种继承方式，决定了基类成员在派生类中的访问权限：
+
+1. **public继承**（最常用）
+   - 基类的public成员在派生类中保持public
+   - 基类的protected成员在派生类中保持protected
+   - 基类的private成员不可直接访问
+2. **protected继承**
+   - 基类的public和protected成员在派生类中都变为protected
+   - 基类的private成员不可直接访问
+3. **private继承**
+   - 基类的public和protected成员在派生类中都变为private
+   - 基类的private成员不可直接访问
 
 #### 析构顺序
 
