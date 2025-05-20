@@ -2817,6 +2817,8 @@ int main() {
 
 **定义：**一种特殊的函数重载，通过定义名为`operator@`的函数（`@`代表要重载的运算符），来指定该运算符在自定义类型上的行为。
 
+- 后置递增/递减需要用`int`占位符；且返回的是对象的**值**，而非引用
+
 ```cpp
 class Vector2D {
 private:
@@ -2878,9 +2880,9 @@ public:
         return temp;
     }
 
-    // 5. 赋值运算符重载
+    // 5. 赋值运算符重载，返回引用支持链式调用
     Vector2D& operator=(const Vector2D& other) {
-        if (this != &other) { // 防止自赋值
+        if (this != &other) { // 比较地址，防止自赋值
             x = other.x;
             y = other.y;
         }
@@ -2896,7 +2898,6 @@ public:
         return !(*this == other);
     }
 
-    // 向量长度比较
     bool operator<(const Vector2D& other) const {
         return (x * x + y * y) < (other.x * other.x + other.y * other.y);
     }
@@ -2911,6 +2912,17 @@ public:
 
     bool operator>=(const Vector2D& other) const {
         return !(*this < other);
+    }
+    
+    // 7. 函数调用运算符重载
+    // 示例1：缩放向量（返回缩放后的新向量）
+    Vector2D operator()(double scale) const {
+        return Vector2D(x * scale, y * scale);
+    }
+
+    // 示例2：计算与另一个向量的点积（返回标量）
+    double operator()(const Vector2D& other) const {
+        return x * other.x + y * other.y;
     }
 };
 
@@ -2947,6 +2959,12 @@ int main() {
     std::cout << "v1 != v2? " << (v1 != v2) << std::endl; // 1 (true)
     std::cout << "v1 < v2? " << (v1 < v2) << std::endl;   // 0 (false)
     std::cout << "v1 > v2? " << (v1 > v2) << std::endl;   // 1 (true)
+    
+    // 7. 函数调用运算符
+    Vector2D scaled = v1(2.0); // 缩放为原来的2倍
+    std::cout << "v1 scaled by 2: " << scaled << std::endl; // 输出 (6, 8)
+    double dotProduct = v1(v2); // v1和v2的点积
+    std::cout << "v1 · v2 = " << dotProduct << std::endl; // 输出 3 * 1 + 4 * 2 = 11
 
     system("pause");
     return 0;
@@ -2954,5 +2972,15 @@ int main() {
 ```
 
 ### 继承
+
+**定义：**继承是指一个类（派生类/子类）可以继承另一个类（基类/父类）的属性和方法，同时可以添加自己的新特性。
+
+#### 访问控制
+
+#### 析构顺序
+
+#### 同名成员
+
+#### 同名静态成员
 
 ### 多态
