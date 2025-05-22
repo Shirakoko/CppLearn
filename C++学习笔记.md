@@ -3002,10 +3002,89 @@ C++中有三种继承方式，决定了基类成员在派生类中的访问权�
    - 基类的public和protected成员在派生类中都变为private
    - 基类的private成员不可直接访问
 
-#### 析构顺序
+#### 构造顺序和析构顺序
 
-#### 同名成员
+一个派生类中的类对象的构造顺序如下：
 
-#### 同名静态成员
+1. 父类构造：先构造**最顶层**的基类，若基类有多个按继承**声明顺序**从左到右构造
+2. 成员对象构造：按类定义中成员变量的**声明顺序**构造
+3. 自身构造：执行自身的构造函数
+
+析构顺序和构造顺序完全相反。
+
+```cpp
+class Base {
+public:
+    Base() { cout << "Base constructed\n"; }
+    ~Base() { cout << "Base destroyed\n"; } // 虚析构确保多态安全
+};
+
+class Member {
+public:
+    Member() { cout << "Member constructed\n"; }
+    ~Member() { cout << "Member destroyed\n"; }
+};
+
+class Derived : public Base {
+    Member m;
+public:
+    Derived() { cout << "Derived constructed\n"; }
+    ~Derived() { cout << "Derived destroyed\n"; }
+};
+
+int main() {
+    Derived d;
+    return 0;
+}
+```
+
+#### 同名成员和名字隐藏
+
+当子类和父类出现同名成员变量时，默认情况下访问的是**子类的成员变量**；如子类需访问父类的同名成员变量，必须显式指定作用域。
+
+```cpp
+class Base {
+public:
+    int value = 10;  // 父类成员变量
+};
+
+class Derived : public Base {
+public:
+    int value = 20;  // 子类同名成员变量
+};
+
+int main() {
+    Derived d;
+    cout << d.value << endl; // 20
+    cout << d.Base::value << endl; // 10
+    return 0;
+}
+```
+
+当子类定义了与父类同名的函数（即使参数不同），父类的**所有同名函数都会被隐藏**；如子类需访问父类的同名成员函数必须显示指定作用域。
+
+```cpp
+class Base {
+public:
+    void show() { cout << "Base::show()" << endl; }
+    void show(int x) { cout << "Base::show(int)" << endl; } // 重载函数
+};
+
+class Derived : public Base {
+public:
+    void show() { cout << "Derived::show()" << endl; } // 隐藏父类所有 show()
+};
+
+int main() {
+    Derived d;
+    d.show();          // 输出 "Derived::show()"
+    // d.show(10);     // 错误！父类的 show(int) 被隐藏
+    d.Base::show();    // 输出 "Base::show()"
+    d.Base::show(10);  // 输出 "Base::show(int)"
+    return 0;
+}
+```
+
+#### 
 
 ### 多态
