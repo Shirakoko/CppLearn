@@ -3085,6 +3085,57 @@ int main() {
 }
 ```
 
-#### 
+#### 多继承
+
+**定义：**允许一个类同时继承多个基类。
+
+```cpp
+class Derived : public Base1, public Base2, ... {
+    // 派生类成员
+};
+```
+
+**问题：**菱形继承问题，一个派生类通过**多条路径**继承**同一个基类**，会导致**数据冗余**和**二义性**；因此实际开发中尽量少用多继承，优先使用**组合**或**单继承+接口**的方式。
+
+```cpp
+class A {
+public:
+    int value = 10;
+};
+
+class B : public A {};  // B 继承 A
+class C : public A {};  // C 继承 A
+class D : public B, public C {};  // D 继承 B 和 C（菱形继承）
+
+int main() {
+    D d;
+    // 编译错误：不知道访问 B::A::value 还是 C::A::value
+    cout << d.value << endl;
+
+    // 必须明确指定路径
+    cout << d.B::value << endl;  // 输出 10
+    cout << d.C::value << endl;  // 输出 10
+    return 0;
+}
+```
+
+**解决方案：**虚继承，使用`virtual`关键字让两个派生类共享同一份基类的实例，虚继承会增加**虚基类指针**，略微影响性能。虚继承适用于派生类需要共享基类数据（如“人”作为“学生”和“老师”的共同基类）。
+
+```cpp
+class A {
+public:
+    int value = 10;
+};
+
+class B : virtual public A {};  // 虚继承
+class C : virtual public A {};  // 虚继承
+class D : public B, public C {};
+
+int main() {
+    D d;
+    cout << d.value << endl;  // 正确，输出 10
+    return 0;
+}
+```
 
 ### 多态
