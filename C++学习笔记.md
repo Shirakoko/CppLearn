@@ -1,6 +1,6 @@
 # C++学习笔记
 
-## C++入门
+## 基本概念
 
 ### 程序语言是什么
 
@@ -3297,6 +3297,89 @@ int main() {
     Base* obj = new Derived();
     delete obj;
     return 0;
+}
+```
+
+## 文件操作
+
+程序运行时产生的数据属于临时数据，通过文件可以将数据持久化。文件分为两种：
+
+1. 文本文件：文件以文本ASCII码的形式存储
+2. 二进制文件：文件以二进制的形式存储
+
+操作文件的三大类：
+
+1. `ofstream`：仅写操作
+2. `ifstream`：仅读操作
+3. `fstream`：读写操作
+
+### 文件打开模式
+
+文件打开模式可以配合使用，用`|`操作符，如：`ios::binary | ios::out`
+
+|  模式标志   |           描述           |
+| :---------: | :----------------------: |
+|   ios::in   |         读取模式         |
+|  ios::out   |         写入模式         |
+|  ios::app   |         追加模式         |
+|  ios::ate   | 打开文件后定位到文件末尾 |
+| ios::trunc  |  如果文件存在则清空内容  |
+| ios::binary |        二进制模式        |
+
+### 写文本文件
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ofstream ofs;
+	ofs.open("test.txt", ios::out);
+	ofs << "Hello World" << endl;
+	ofs.close();
+}
+```
+
+### 读文本文件
+
+有四种方法可以读取文本文件。
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+int main() {
+	ifstream ifs;
+	ifs.open("test.txt", ios::in);
+	if (!ifs.is_open()) {
+		cout << "文件打开失败" << endl;
+		return 0;
+	}
+
+	char buffer[1024] = { 0 };
+	while (ifs >> buffer) {
+		cout << buffer << endl; // 打印：Hello\nWorld，提取运算符(>>)读取文件内容时，会按照空白字符分割输入
+	}
+
+	while (ifs.getline(buffer, 1024)) {
+		cout << buffer << endl; // 打印：Hello World
+	}
+
+	string buffer2;
+	while (getline(ifs, buffer2)) {
+		cout << buffer2 << endl; // 打印：Hello World
+	}
+
+	char c;
+	while ((c = ifs.get()) != EOF) {
+		cout << c;  // 打印：Hello World
+	}
+
+	ifs.close();
+	return 0;
 }
 ```
 
