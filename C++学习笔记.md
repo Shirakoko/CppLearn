@@ -1,4 +1,4 @@
-# C++学习笔记
+# C++学习笔记（上）
 
 ## 基本概念
 
@@ -3087,7 +3087,7 @@ int main() {
 
 #### 多继承
 
-**定义：**允许一个类同时继承多个基类。
+**定义：**允许一个类同时继承多个基类
 
 ```cpp
 class Derived : public Base1, public Base2, ... {
@@ -3343,7 +3343,7 @@ int main() {
 
 ### 读文本文件
 
-有四种方法可以读取文本文件。
+有四种方法可以读取文本文件
 
 ```cpp
 #include <iostream>
@@ -3379,6 +3379,55 @@ int main() {
 	}
 
 	ifs.close();
+	return 0;
+}
+```
+
+### 写二进制文件
+
+打开方式指定为`ios::binary`，使用`ofstream& write(const char* buffer, int len)`函数写入二进制文件
+
+```cpp
+class Person {
+public:
+	char m_Name[64];
+	int m_Age;
+};
+
+int main() {
+	ofstream ofs;
+	ofs.open("person.txt", ios::out | ios::binary);
+
+	Person p = { "Alice", 18 };
+	ofs.write((const char*)&p, sizeof(Person));
+	ofs.close();
+	return 0;
+}
+```
+
+### 读二进制文件
+
+打开方式指定为`ios::binary`，使用`istream& read(char* buffer, int len)`函数读取二进制文件
+
+```cpp
+class Person {
+public:
+	char m_Name[64];
+	int m_Age;
+};
+
+int main() {
+	ifstream ifs;
+	ifs.open("person.txt", ios::in | ios::binary);
+	if (!ifs.is_open()) {
+		cout << "文件打开失败" << endl;
+	}
+
+	Person p;
+	ifs.read((char*)&p, sizeof(Person));
+	cout << "姓名: " << p.m_Name << endl; // 姓名: Alice
+	cout << "年龄: " << p.m_Age << endl; // 年龄: 18
+
 	return 0;
 }
 ```
