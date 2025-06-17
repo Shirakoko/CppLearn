@@ -3625,3 +3625,63 @@ int main() {
 
 ### 类模板
 
+类模板允许在编写时处理多种数据类型，而不需要为每种类型重写代码
+
+```cpp
+template <typename T>
+class Box {
+private:
+	T content;
+public:
+	void SetContent(const T& newContent) {
+		content = newContent;
+	}
+	T getContent() const {
+		return content;
+	}
+};
+
+int main() {
+	Box<int> intBox;
+	intBox.SetContent(10);
+
+	Box<string> strBox;
+	strBox.SetContent("Hello");
+
+	return;
+}
+```
+
+类模板和函数模板有如下区别，最大的区别是**必须显式指定参数类型**。
+
+|     特性     |   类模板 (Class Template)    | 函数模板 (Function Template) |
+| :----------: | :--------------------------: | :--------------------------: |
+|  **实例化**  |       必须显式指定类型       |       可以自动推导类型       |
+|   **特化**   |      支持全特化和偏特化      |          支持全特化          |
+| **默认参数** |       支持模板默认参数       |   C++11后支持默认模板参数    |
+| **常见用途** | 容器类(如vector)、智能指针等 | 通用算法(如sort)、工具函数等 |
+
+#### 类模板中的成员函数
+
+类模板中的成员函数会**延迟实例化**：不会在类定义时立刻创建，而是在成员函数被实际使用时才实例化，这种机制也称为”按需实例化“或”惰性实例化“。实例化规则如下：
+
+- 当实例化类模板时，只有被使用的成员函数才会实例化
+- 未被使用的成员函数不会生成，意味着即使编译错误在生成时也不会报错
+
+```cpp
+template <typename T>
+class Example {
+public:
+    void usedFunction() { /* 会被实例化 */ }
+    void unusedFunction() { T::non_existent(); /* 不会被实例化，且错误代码不报错 */ }
+};
+
+int main() {
+    Example<int> obj;
+    obj.usedFunction();  // 只实例化usedFunction()
+    //obj.unusedFunction();  // 如果取消注释，生成时会报错
+
+    return 0;
+}
+```
+
