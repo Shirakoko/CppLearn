@@ -3445,7 +3445,31 @@ C++ 模板是支持**泛型编程**的核心特性，允许编写与类型无关
 建立一个通用的函数，函数返回值类型和形参类型可以不具体指定，用一个**虚拟的类型**来代表。
 
 ```cpp
-template<typename T>
+template<typename/class T>
 函数声明或定义
+```
+
+模板使用时可以**显式指定类型**，也可**自动推导类型**。
+
+```cpp
+template<typename T>
+void mySwap(T& a, T& b) {
+	T temp = a;
+	a = b;
+	b = temp;
+}
+
+int main() {
+	int a = 10;
+	int b = 20;
+    
+	mySwap<int>(a, b); // 显式指定类型
+	mySwap(a, b); // 自动推导类型
+
+	cout << "a = " << a << endl;
+	cout << "b = " << b << endl;
+
+	return 0;
+}
 ```
 
