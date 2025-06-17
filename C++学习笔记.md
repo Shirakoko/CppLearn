@@ -3434,15 +3434,15 @@ int main() {
 
 ## 模板
 
-C++ 模板是支持**泛型编程**的核心特性，允许编写与类型无关的代码。
+C++ 模板是支持**泛型编程**的核心特性，允许编写与类型无关的代码
 
-目的：避免重复代码，实现**与类型无关**的逻辑（如通用的排序、容器等）。
+目的：避免重复代码，实现**与类型无关**的逻辑（如通用的排序、容器等）
 
-原理：编译器在编译时根据具体类型**实例化**模板，生成对应的代码。
+原理：编译器在编译时根据具体类型**实例化**模板，生成对应的代码
 
 ### 函数模板
 
-建立一个通用的函数，函数返回值类型和形参类型可以不具体指定，用一个**虚拟的类型**来代表。
+建立一个通用的函数，函数返回值类型和形参类型可以不具体指定，用一个**虚拟的类型**来代表
 
 ```cpp
 template<typename/class T>
@@ -3472,4 +3472,156 @@ int main() {
 	return 0;
 }
 ```
+
+所有模板参数必须可推导，如果模板参数无法从实参中推导，则需显式指定或通过默认值补充
+
+```cpp
+template <typename T>
+void foo(T a, T b) {}
+
+template <typename T>
+void bar() {}
+
+int main() {
+	foo(3, 5);
+	// foo(3, 5.0); 错误，T无法同时为int和double
+
+	bar<int>();
+	// bar(); 错误，无法推导T的具体类型
+
+	return 0;
+}
+```
+
+函数模板可以发生重载，分为**模板之间的重载**和**模板与普通函数的重载**。
+
+- 模板之间的重载：多个函数模板同名，参数列表不同
+
+```cpp
+template <typename T>
+void foo(T a) { std::cout << "单参数\n"; }
+
+template <typename T>
+void foo(T* a) { std::cout << "指针重载\n"; }
+
+template <typename T, typename U>
+void foo(T a, U b) { std::cout << "双参数\n"; }
+
+int main() {
+	int x = 10;
+
+	foo(42); // 单参数
+	foo(&x); // 指针重载
+	foo(42, 3.14); // 双参数
+
+	return 0;
+}
+```
+
+- 模板与普通函数的重载：函数模板与普通函数同名
+
+### 普通函数和函数模板
+
+#### 区别
+
+普通函数和函数模板的区别在于调用是能否发生**隐式类型转换**：
+
+- 普通函数调用时可以发生隐式类型转换
+- 函数模板调用时，如果利用自动类型推导，则不会发生隐式类型转换；如果利用显式指定类型，则可以发生隐式类型转换
+
+```cpp
+int myAdd01(int a, int b) {
+	return a + b;
+}
+
+template<typename T>
+T myAdd02(T a, T b) {
+	return a + b;
+}
+
+int main() {
+	int a = 10;
+	char b = 'b';
+
+	cout << myAdd01(a, b) << endl; // 打印：108
+	cout << myAdd02<int>(a, b) << endl; // 打印108
+	// cout << myAdd02(a, c) << endl; 错误：无法推导出T的具体类型
+
+	return 0;
+}
+```
+
+#### 调用规则
+
+普通函数与函数模板**同名**时，编译器会根据一定规则决定调用哪一版本：
+
+- **完全匹配时优先普通函数**：如果普通函数的参数类型**精确匹配**（不需要隐式类型转换），则优先调用普通函数
+- **模板有更优匹配时优先模板**：如果普通函数的匹配需要隐式类型转换，而函数模板能产生更匹配的实例，则优先调用函数模板
+
+```cpp
+void foo(int a) { std::cout << "foo: 普通函数\n"; }
+
+template <typename T>
+void foo(T a) { std::cout << "foo: 函数模板\n"; }
+
+void bar(double a) { std::cout << "bar: 普通函数\n"; }
+
+template <typename T>
+void bar(T a) { std::cout << "bar: 函数模板\n"; }
+
+int main() {
+	foo(420); // foo: 普通函数（普通函数能精确匹配）
+	foo(3.1); // foo：函数模板（普通函数需要 double→int 的转换）
+	
+	bar(420); // bar: 函数模板（T=int 比 double 更匹配 int）
+	bar(3.1); // bar: 普通函数
+
+	return 0;
+}
+```
+
+如果存在模板的全特化版本，优先级比普通模板高
+
+```cpp
+template <typename T>
+void foo(T a) { std::cout << "普通函数模板\n"; }
+
+template <>
+void foo<int>(int a) { std::cout << "int特化模板\n"; }
+
+int main() {
+    foo(42); // int特化模板
+}
+```
+
+模板解析的核心是”哪个更匹配就调哪个“，编译器始终选择当前上下文中**最匹配且代价最低**的版本
+
+```tex
+          [ 最精确匹配 ]
+                ↑
+普通函数（完全匹配） → 模板特化 → 通用模板
+                ↑
+          隐式转换代价更低者胜出
+```
+
+如果需要**强制调用**函数模板，可通过如下方式：
+
+- 显式指定函数模板：显式告诉编译器调用函数模板版本
+- 使用模板语法（空尖括号）：显式告诉编译器调用函数模板版本
+
+```cpp
+void foo(int a) { std::cout << "foo: 普通函数\n"; }
+
+template <typename T>
+void foo(T a) { std::cout << "foo: 函数模板\n"; }
+
+int main() {
+	foo<int>(42); // 强制调用模板版本（即使普通函数存在）
+	foo<>(42); // 显式告知编译器使用模板推导
+
+	return 0;
+}
+```
+
+### 类模板
 
