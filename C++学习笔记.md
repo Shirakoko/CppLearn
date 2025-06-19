@@ -3685,3 +3685,93 @@ int main() {
 }
 ```
 
+#### 类模板对象作函数参数
+
+类模板实例化出的对象向函数传递参数有三种传入方式：
+
+1. 指定传入的类型：直接指定类模板的具体类型，函数接收**已实例化**的类模板对象，灵活性低，适用于明确需要某种具体类型（最常用）
+2. 参数模板化：将函数定义为模板，通过参数推导**适配不同模板参数**的类实例，灵活性中，适配同一模板类的不同实例化
+3. 整个类模板化：将**类模板本身作为模板参数**传递给函数，支持不同模板类的传递，灵活性高，适配不同类模板
+
+```cpp
+template <class T, class U>
+class Example {
+public:
+    T m_T;
+    U m_U;
+};
+
+// 1、指定传入类型
+void func01(Example<string, int>& e) {}
+
+// 2、参数模板化
+template <class T, class U>
+void func02(Example<T, U>& e) {}
+
+// 3、整个类模板化
+template<class T>
+void func03(T& e) {}
+
+int main() {
+    Example<string, int> example01;
+    func01(example01);
+
+    Example<double, int> example02;
+    func02(example02);
+
+    Example<int, bool> example03;
+    func03(example03);
+
+    return 0;
+}
+```
+
+#### 类模板的继承
+
+类模板的继承符合以下几种情形和规则：
+
+- **普通类继承类模板**：派生类可以继承一个**已实例化的类模板**（固定模板参数）
+- **类模板继承类模板**：派生类本身也是模板，可以灵活传递基类的模板参数
+- **多模板参数与默认参数**：基类和派生类可以有多个模板参数或使用默认参数
+- **模板的模板参数继承**：模板参数本身可以是另一个类模板
+
+```cpp
+template <class T, class U>
+class Base {
+    T m_T;
+    U m_U;
+};
+
+// 1.普通类继承类模板
+class Derived01:public Base<int, bool> {
+
+};
+
+// 2.类模板继承类模板
+template<class T, class U>
+class Derived02:public Base<T, U> {
+
+};
+
+// 3.多模板参数与默认参数
+template <class T>
+class Derived03:public Base<T, int> {
+
+};
+
+// 4.模板的模板参数继承
+template<template<class, class> class Container, class T, class U>
+class Derived04 :public Container<T, U> {
+
+};
+
+int main() {
+    Derived01 d1;
+    Derived02<int, double> d2;
+    Derived03<string> d3;
+    Derived04<Base, int, bool> d4; // 继承 Base<int, double>
+
+    return 0;
+}
+```
+
