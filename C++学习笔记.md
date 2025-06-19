@@ -2717,7 +2717,7 @@ int main() {
 - **友元全局函数**
 
   - **作用**：允许一个**全局函数**访问类的私有或受保护成员
-  - **语法**：在类内部用 `friend` 声明全局函数
+  - **语法**：在类内用 `friend` 声明全局函数，函数的定义可以在**类内或类外**
 
   ```cpp
   class Box {
@@ -2727,19 +2727,24 @@ int main() {
   public:
       Box(int w) : width(w) {}
   
-      // 声明全局函数为友元
-      friend void printWidth(Box box);
+      // 声明全局函数为友元，定义在类外
+      friend void printWidth01(Box box);
+      // 声明全局函数为友元，定义在类内
+      friend void printWidth02(Box box) {
+          cout << "Box width: " << box.width << endl;
+      }
   };
   
-  // 全局函数定义
-  void printWidth(Box box) {
+  void printWidth01(Box box) {
       // 可以访问私有成员 width
       cout << "Box width: " << box.width << endl;
   }
   
   int main() {
       Box box(10);
-      printWidth(box); // 输出: Box width: 10
+      printWidth01(box); // 输出: Box width: 10
+      printWidth02(box); // 输出: Box width: 10
+  
       return 0;
   }
   ```
@@ -3774,4 +3779,76 @@ int main() {
     return 0;
 }
 ```
+
+#### 类模板成员函数类外实现
+
+板成员函数的类外实现需要以和类模板相同的参数列表开头
+
+```cpp
+template <class T, class U>
+class Base {
+public:
+    Base(T t, U u); // 构造函数声明
+    void Print(); // 成员函数声明
+
+private:
+    T m_T;
+    U m_U;
+};
+
+// 构造函数实现
+template <class T, class U>
+Base<T, U>::Base(T t, U u) {
+    this->m_T = t;
+    this->m_U = u;
+}
+
+// 成员函数实现
+template <class T, class U>
+void Base<T, U>::Print() {
+    cout << "m_T: " << this->m_T << endl;
+    cout << "m_U" << this->m_U << endl;
+}
+```
+
+#### 类模板份文件编写
+
+类模板中的成员函数创建时机是在调用阶段，导致分文件编写时因为链接不到而**生成时报错**无法解析的外部符号，有两种解决方法：
+
+- 调用函数的文件直接包含类的`.cpp`源文件
+- 将函数声明和实现写在同一个文件中，更改后缀名为`.hpp`
+
+#### 友元全局函数
+
+如果友元函数**依赖类模板的模板参数**（即它本身是函数模板），则**定义时必须带模板参数**，否则生成时报错无法解析的外部符号
+
+```cpp
+template <class T, class U>
+class TestClass
+{
+	// 1.全局函数作友元，类内声明和定义
+	friend void PrintInsideClass(TestClass<T, U> t) {
+		cout << "PrintInsideClass" << endl;
+	}
+
+	// 2.全局函数作友元，类内声明，类外定义
+	template <class A, class B>
+	friend void PrintOutsideClass(TestClass<A, B> t);
+
+public:
+	TestClass(T t, U u) : m_T(t), m_U(u) {}
+
+private:
+	T m_T;
+	U m_U;
+};
+
+// 全局函数类外定义
+template <class A, class B>
+void PrintOutsideClass(TestClass<A, B> t) {
+	cout << "PrintOutsideClass" << endl;
+}
+```
+
+## STL
 
