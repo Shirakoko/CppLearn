@@ -1,4 +1,4 @@
-# C++学习笔记（上）
+# C++学习笔记
 
 ## 基本概念
 
@@ -3852,3 +3852,22 @@ void PrintOutsideClass(TestClass<A, B> t) {
 
 ## STL
 
+STL（标准模板库，Standard Template Library）是C++标准库的重要组成部分。STL 的设计遵循**泛型编程**思想，通过**模板**实现和类型无关的算法和数据结构，大大提高了代码的**复用性**和开发效率。提供了一系列通用的模板类和模板函数，主要包括以下三个核心组件：
+
+- **容器（Containers）**：存储和管理数据的模板类
+  - 序列容器：`vector`、`list`、`deque`、`array`（C++11）、`forward_list`（C++11）
+  - 关联容器：`set`/`multiset`、`map`/`multimap`（基于红黑树，有序）
+  - 无序关联容器：`unordered_set`/`unordered_map`（C++11，基于哈希表）
+  - 容器适配器：`stack`、`queue`、`priority_queue`（基于其他容器封装）
+- **算法（Algorithms）**：对**容器中的元素**进行操作，**算法通过迭代器和容器解耦**，不直接操作容器本身；包含约 100 种通用算法（如 `sort`、`find`、`copy`、`transform`）
+- **迭代器（Iterators）**：作为**容器和算法之间的桥梁**，迭代器提供了统一的**访问容器元素**的方式
+  - 输入迭代器（只读）、输出迭代器（只写）
+  - 前向迭代器（如`forward_list`）、双向迭代器（如 `list`）、随机访问迭代器（如 `vector`）
+- **仿函数（Functors）**和**匿名函数（Lambda）**：作为算法的策略（如自定义排序规则）
+  - 仿函数（也称函数对象）是行为类似函数的对象，重载`operator()`的类
+  - Lambda表达式为匿名函数对象
+- **适配器（Adapters）**：对现有组件进行封装，提供不同的接口
+  - 容器适配器：`stack`、`queue`、`priority_queue`
+  - 迭代器适配器：`reverse_iterator`（反向迭代器）
+  - 函数适配器：`bind`（C++11）、`function`（C++11）
+- **分配器（Allocators）**：管理容器内存的分配与释放（默认使用 `std::allocator`），用户可以自定义分配器，但通常不需要直接使用，除非有特殊内存需求
