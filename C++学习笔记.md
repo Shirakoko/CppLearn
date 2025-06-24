@@ -3977,7 +3977,55 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 使用运算符`+=`拼接：
 
+- `string& operator+=(const char* s)`：拼接C风格字符串
+
+  ```cpp
+  string str;
+  str += "He";
+  ```
+
+- `string& operator+=(const char c)`：拼接单个字符`c`
+
+  ```cpp
+  str += 'l';
+  ```
+
+- `string& operator+=(const string& str)`：拼接另一个字符串`str`
+
+  ```cpp
+  string str2("lo");
+  str += str2;
+  ```
+
 使用方法`append`拼接：
+
+- `string& append(const char* s)`：拼接C风格字符串
+
+  ```cpp
+  str.append("He");
+  ```
+
+- `string& append(const string& str)`：拼接另一个字符串`str`
+
+  ```cpp
+  string str3("llo");
+  str.append(str3);
+  ```
+
+- `string& append(const char* s, int n)`：拼接C风格字符串`s`的前`n`个字符
+
+  ```cpp
+  str.append(" WWW", 2);
+  ```
+
+- `string& append(const char* s, int pos, int len = npos)`或`string& assign(const string& str, int pos, int len = npos)`：取从索引`pos`开始的`len`个字符拼接，不传参数`len`时取到字符串末尾
+
+  ```cpp
+  str.append("Worlddd", 1, 4);
+  
+  string str4("??!??");
+  str.append(str4, 2, 1);
+  ```
 
 #### 字符串查找和替换
 
