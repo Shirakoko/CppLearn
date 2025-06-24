@@ -3874,7 +3874,7 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 ### String容器
 
-`std::string`是C++标准库中提供的字符串类，它封装了字符串的各种操作，比C风格的字符数组更安全、方便。
+`std::string`是C++标准库中提供的字符串**类**，它封装了字符串的各种操作，比C风格的字符数组更安全、方便。
 
 #### 构造函数
 
@@ -3916,6 +3916,63 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   ```
 
 #### 赋值操作
+
+使用=操作符赋值：
+
+- `string& operator=(const char* s)`：使用C风格字符串赋值给当前字符串
+
+  ```cpp
+  string str;
+  str = "Hello";
+  ```
+
+- `string& operator=(const string& str)`：把字符串`str`赋值给当前字符串
+
+  ```cpp
+  string str2;
+  str2 = str;
+  ```
+
+- `string& operator=(char c)`：把字符`c`赋值给当前字符串
+
+  ```cpp
+  string str3;
+  char c = 'H';
+  str3 = c;
+  ```
+
+使用assign方法赋值：
+
+- `string& assign(const char* s)`：使用C风格字符串赋值给当前字符串
+
+  ```cpp
+  str.assign("World");
+  ```
+
+- `string& assign(const string& str)`：把字符串`str`赋值给当前字符串
+
+  ```cpp
+  str.assign(str2);
+  ```
+
+- `string& assign(int n, char c)`：将n个字符`c`赋值给当前字符串
+
+  ```cpp
+  str.assign(5, 'X'); // XXXXX
+  ```
+
+- `string& assign(const char* s, int n)`：把C风格字符串`s`的前`n`个字符赋值给当前字符串
+
+  ```cpp
+  str.assign("Hello World", 5);
+  ```
+
+- `string& assign(const char* s, int pos, int len = npos)`或`string& assign(const string& str, int pos, int len = npos)`：取从索引`pos`开始的`len`个字符赋值给当前字符串
+
+  ```cpp
+  str.assign(str2, 1, 3);
+  str.assign("Hello", 1, 3);
+  ```
 
 #### 字符串拼接
 
