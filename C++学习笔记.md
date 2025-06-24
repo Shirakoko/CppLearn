@@ -3908,7 +3908,7 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   string str6("Hello World", 5); // Hello
   ```
 
-- `string(const char* s, int pos, int len = npos)`或`string(const string& str, int pos, int len = npos)`：使用子序列构造，取从索引`pos`开始的`len`个字符
+- `string(const char* s, int pos, int len = npos)`或`string(const string& str, int pos, int len = npos)`：使用子序列构造，取从索引`pos`开始的`len`个字符，不传参数`len`时取到字符串末尾
 
   ```cpp
   string str7("Programming", 3, 4); // gram
@@ -3917,7 +3917,7 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 #### 赋值操作
 
-使用=操作符赋值：
+使用运算符`=`赋值：
 
 - `string& operator=(const char* s)`：使用C风格字符串赋值给当前字符串
 
@@ -3937,11 +3937,10 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
   ```cpp
   string str3;
-  char c = 'H';
-  str3 = c;
+  str3 = 'H';
   ```
 
-使用assign方法赋值：
+使用方法`assign`赋值：
 
 - `string& assign(const char* s)`：使用C风格字符串赋值给当前字符串
 
@@ -3967,7 +3966,7 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   str.assign("Hello World", 5);
   ```
 
-- `string& assign(const char* s, int pos, int len = npos)`或`string& assign(const string& str, int pos, int len = npos)`：取从索引`pos`开始的`len`个字符赋值给当前字符串
+- `string& assign(const char* s, int pos, int len = npos)`或`string& assign(const string& str, int pos, int len = npos)`：取从索引`pos`开始的`len`个字符赋值给当前字符串，不传参数`len`时取到字符串末尾
 
   ```cpp
   str.assign(str2, 1, 3);
@@ -3975,6 +3974,10 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   ```
 
 #### 字符串拼接
+
+使用运算符`+=`拼接：
+
+使用方法`append`拼接：
 
 #### 字符串查找和替换
 
