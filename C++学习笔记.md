@@ -4027,7 +4027,34 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   str.append(str4, 2, 1);
   ```
 
-#### 字符串查找和替换
+#### 字符串查找
+
+正向查找用方法`find`：
+
+- `int find(const string& str, size_t pos = 0) const`或`int find(const char* s, size_t pos = 0) const`：正向查找字符串`str`/`s`在给定字符串中的位置
+
+  ```cpp
+  string str = "Hello World Hello";
+  int pos;
+  
+  pos = str.find("Hello");    // 返回0（首次出现位置）
+  pos = str.find("World");    // 返回6
+  pos = str.find("hello");    // 返回-1（未找到）
+  pos = str.find("Hello", 1); // 从位置1开始找，返回12
+  ```
+
+反向查找用`rfind`：
+
+- `int rfind(const string& str, int pos = npos) const`或`int rfind(const char* s, int pos = npos) const`：反向查找字符串`str`/`s`在给定字符串中的位置
+
+  ```cpp
+  pos = str.rfind("Hello");   // 返回12（最后一次出现位置）
+  pos = str.rfind("ll", 5);    // 在前5个字符中反向找'll'，返回2
+  ```
+
+查找任意匹配字符
+
+#### 字符串替换
 
 #### 字符串插入和删除
 
