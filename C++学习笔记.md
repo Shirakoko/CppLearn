@@ -4078,6 +4078,8 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 #### 字符串替换
 
+字符串替换主要通过`replace`方法实现：
+
 - `string& replace(int pos, int len, const string& str)`或`string& replace(int pos, int len, const char* s)`：从`pos`位置开始，将`len`长度的子串替换为`str`/`s`
 
   ```cpp
@@ -4112,6 +4114,101 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   str.replace(str.end()-10, str.end(), 5, '!');  // "*** hate !!!!!"
   ```
 
+#### 字符串插入
+
+在字符串的指定位置插入内容主要用`insert`方法：
+
+- `string& insert(int pos, const char* s)`：在`pos`位置插入C风格字符串
+
+  ```cpp
+  string str("HelloWorld");
+  str.insert(5, " "); // Hello World
+  ```
+
+- `string& insert(int pos, const string& str)`：在`pos`位置插入另一个`string`
+
+  ```cpp
+  string str2("Hello");
+  str.insert(6, str2); // Hello HelloWorld
+  ```
+
+- `string& insert(int pos, const char* s, int len)`：在`pos`位置插入C风格字符串的前`len`个字符
+
+  ```cpp
+  str.insert(11, "***", 1); // Hello Hello*World
+  ```
+
+- `string& insert(int pos, const string& str, int pos2, int count = npos)`：在`pos`位置插入另一个`string`的子串
+
+  ```cpp
+  string str3("Say Hi");
+  str.insert(0, str3, 0, 4); // Say Hello Hello*World
+  ```
+
+- `string& insert(int pos, int n, char c)`：在`pos`位置插入`n`个字符`c`
+
+  ```cpp
+  str.insert(15, 2, '*'); // Say Hello Hello***World
+  ```
+
+- `iterator insert(iterator pos, char c)`：在迭代器位置前插入字符`c`
+
+  ```cpp
+  str = "Warning";
+  str.insert(str.begin(), '!'); // !Warning
+  ```
+
+- `void insert(iterator pos, int n, char c)`：在迭代器位置前插入`n`个字符`c`
+
+  ```cpp
+  str.insert(str.end(), 2, '?'); // !Warning??
+  ```
+
+#### 字符串删除
+
+字符串删除通过`erase`方法实现：
+
+- `string& erase(int pos = 0, int n = npos)`：删除从`pos`开始的`n`个字符，不指定则删除到末尾
+
+  ```cpp
+  string str("Hello, World!");
+  str.erase(7, 5); // Hello, !
+  ```
+
+- `iterator erase(iterator pos)`：删除迭代器指向的字符
+
+  ```cpp
+  str = "Programming";
+  auto it = str.erase(str.begin() + 3); // Proramming
+  ```
+
+- `iterator erase(iterator first, iterator last)`：删除迭代器范围[first, last)的字符
+
+  ```cpp
+  str = "This is an example";
+  it = str.erase(str.begin() + 5, str.begin() + 11); // This example
+  ```
+
+#### 字符访问
+
+在C++中，访问字符串中的单个字符主要有两种方式，使用下标运算符`[]`和使用`at()`成员函数
+
+- `char& operator[] (int pos)`或`const char& operator[] (int pos) const`：直接通过索引访问，不进行边界检查
+
+  ```cpp
+  string str = "Hello";
+  str[0] = 'h';
+  ```
+
+- `char& at(int pos)`或`const char& at(int pos) const`：进行边界检查，如果越界则抛异常
+
+  ```cpp
+  string str = "World";
+  str.at(0) = 'w';
+  ```
+
+#### 子串获取
+
 #### 字符串比较
 
 `string`提供了`>`、`<`、`==`、`>=`、`<=`、`!=`等比较运算符，还提供了`compare()`函数，支持多参数处理，支持用索引值和长度截取子串进行比较
@@ -4140,14 +4237,6 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   ```cpp
   s.compare(0, 11, "Hello!", 5); // 返回>0（"Hello World" > "Hello"）
   ```
-
-#### 字符串插入
-
-#### 字符串删除
-
-#### 字符串存取
-
-#### 子串获取
 
 
 
