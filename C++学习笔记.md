@@ -4114,6 +4114,33 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 #### 字符串比较
 
+`string`提供了`>`、`<`、`==`、`>=`、`<=`、`!=`等比较运算符，还提供了`compare()`函数，支持多参数处理，支持用索引值和长度截取子串进行比较
+
+- `int compare(const string& str) const`或`int compare(const char* s) const`：完整字符串比较
+
+  ```cpp
+  string s = "Hello World";
+  s.compare("Hello World");  // 返回0
+  ```
+
+- `int compare(int pos, int len, const string& str) const`或`int compare(int pos, int len, const char* s) const`：子串比较
+
+  ```cpp
+  s.compare(6, 5, "World"); // 比较"World"和"World"，返回0
+  ```
+
+- `int compare(int pos, int len, const string& str, int subpos, int sublen) const`或`int compare(int pos, int len, char* s, int subpos, int sublen) const`：子串与子串比较
+
+  ```cpp
+  s.compare(0, 5, "Hello Earth", 0, 5); // 比较"Hello"和"Hello"，返回0
+  ```
+
+- `int compare(int pos, int len, const char* s, int = npos) const`：与C风格字符串子串比较
+
+  ```cpp
+  s.compare(0, 11, "Hello!", 5); // 返回>0（"Hello World" > "Hello"）
+  ```
+
 #### 字符串插入
 
 #### 字符串删除
