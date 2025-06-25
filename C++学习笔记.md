@@ -4078,9 +4078,45 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 #### 字符串替换
 
-#### 字符串插入和删除
+- `string& replace(int pos, int len, const string& str)`或`string& replace(int pos, int len, const char* s)`：从`pos`位置开始，将`len`长度的子串替换为`str`/`s`
+
+  ```cpp
+  string str = "I like Java";
+  str.replace(7, 4, "C++");  // "I like C++"
+  str.replace(2, 4, "love");  // "I love C++"
+  ```
+
+- `string& replace(int pos, size_t len, const string& str, int subpos, int sublen)`：使用`str`的子串进行替换
+
+  ```cpp
+  string repl = "Python/JavaScript";
+  str.replace(7, 3, repl, 7, 10);  // "I love JavaScript"
+  ```
+
+- `string& replace(int pos, int len, int n, char c)`：用`n`个字符`c`替换
+
+  ```cpp
+  str.replace(0, 1, 3, '*');  // "*** love JavaScript"
+  ```
+
+- `string& replace(iterator i1, iterator i2, const string& str)`：使用迭代器范围指定替换位置
+
+  ```cpp
+  string::iterator it = str.begin() + 4;
+  str.replace(it, it+4, "hate");  // "*** hate JavaScript"
+  ```
+
+- `string& replace(iterator i1, iterator i2, int n, char c)`：用`n`个字符`c`填充
+
+  ```cpp
+  str.replace(str.end()-10, str.end(), 5, '!');  // "*** hate !!!!!"
+  ```
 
 #### 字符串比较
+
+#### 字符串插入
+
+#### 字符串删除
 
 #### 字符串存取
 
