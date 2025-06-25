@@ -4031,7 +4031,7 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 正向查找用方法`find`：
 
-- `int find(const string& str, size_t pos = 0) const`或`int find(const char* s, size_t pos = 0) const`：正向查找字符串`str`/`s`在给定字符串中的位置
+- `int find(const string& str, int pos = 0) const`或`int find(const char* s, int pos = 0) const`：从`pos`开始，**向后**查找字符串`str`/`s`在给定字符串中的位置
 
   ```cpp
   string str = "Hello World Hello";
@@ -4045,14 +4045,36 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 反向查找用`rfind`：
 
-- `int rfind(const string& str, int pos = npos) const`或`int rfind(const char* s, int pos = npos) const`：反向查找字符串`str`/`s`在给定字符串中的位置
+- `int rfind(const string& str, int pos = npos) const`或`int rfind(const char* s, int pos = npos) const`：从`pos`开始，**向前**查找字符串`str`/`s`在给定字符串中的位置
 
   ```cpp
   pos = str.rfind("Hello");   // 返回12（最后一次出现位置）
-  pos = str.rfind("ll", 5);    // 在前5个字符中反向找'll'，返回2
+  pos = str.rfind("ll", 5);    // 返回2
   ```
 
-查找任意匹配字符
+正向查找任意匹配字符用`find_first_of()`：
+
+- `int find_first_of(const string& str, int pos = 0) const`：查找任意匹配字符在字符串中的位置
+
+  ```cpp
+  pos = str.find_first_of("aeiou");  // 返回1（'e'所在的位置）
+  ```
+
+反向查找任意匹配字符用`find_last_of()`：
+
+- `int find_last_of(const string& str, int pos = npos) const`：查找任意匹配字符在字符串中的位置
+
+  ```cpp
+  pos = str.find_last_of("aeiou"); // 返回15（最后一个'o'所在的位置）
+  ```
+
+查找不匹配字符用`find_first_not_of()`：
+
+- `int find_first_not_of(const string& str, int pos = 0) const`：查找任意不匹配字符在字符串中的位置
+
+  ```cpp
+  pos = str.find_first_not_of("Helo "); // 返回6（第一个不匹配字符'W'所在的位置）
+  ```
 
 #### 字符串替换
 
