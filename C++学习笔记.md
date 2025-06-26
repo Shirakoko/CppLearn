@@ -3880,40 +3880,36 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 - `string()`：创建一个空字符串
 
-  ```cpp
-  string str1;
-  ```
-
 - `string(const char* s)`：使用C风格字符串`s`初始化
-
-  ```cpp
-  string str2("Hello");
-  ```
 
 - `string(const string& str)`：使用另一个`string`对象初始化（拷贝构造）
 
-  ```cpp
-  string str3(str2); // Hello
-  ```
-
 - `string(int n, char c)`：使用n个字符`c`构造
-
-  ```cpp
-  string str4(5, 'A'); // AAAAA
-  ```
 
 - `string(const char* s, int n)`：使用子序列构造，取前`n`个字符
 
-  ```cpp
-  string str6("Hello World", 5); // Hello
-  ```
-
 - `string(const char* s, int pos, int len = npos)`或`string(const string& str, int pos, int len = npos)`：使用子序列构造，取从索引`pos`开始的`len`个字符，不传参数`len`时取到字符串末尾
 
-  ```cpp
-  string str7("Programming", 3, 4); // gram
-  string str8(str6, 1, 3); // ell
-  ```
+```cpp
+// 1. 创建空字符串
+string str1;  // ""
+
+// 2. 使用C风格字符串初始化
+string str2("Hello");  // "Hello"
+
+// 3. 拷贝构造
+string str3(str2);  // "Hello"
+
+// 4. 使用n个字符构造
+string str4(5, 'A');  // "AAAAA"
+
+// 5. 使用子序列构造（前n个字符）
+string str5("Hello World", 5);  // "Hello"
+
+// 6. 使用子序列构造（从pos开始取len个字符）
+string str6("Programming", 3, 4);  // "gram"
+string str7(str2, 1, 3);  // "ell"
+```
 
 #### 赋值操作
 
@@ -3921,57 +3917,52 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 - `string& operator=(const char* s)`：使用C风格字符串赋值给当前字符串
 
-  ```cpp
-  string str;
-  str = "Hello";
-  ```
-
 - `string& operator=(const string& str)`：把字符串`str`赋值给当前字符串
 
-  ```cpp
-  string str2;
-  str2 = str;
-  ```
-
 - `string& operator=(char c)`：把字符`c`赋值给当前字符串
-
-  ```cpp
-  string str3;
-  str3 = 'H';
-  ```
 
 使用方法`assign`赋值：
 
 - `string& assign(const char* s)`：使用C风格字符串赋值给当前字符串
 
-  ```cpp
-  str.assign("World");
-  ```
-
 - `string& assign(const string& str)`：把字符串`str`赋值给当前字符串
-
-  ```cpp
-  str.assign(str2);
-  ```
 
 - `string& assign(int n, char c)`：将n个字符`c`赋值给当前字符串
 
-  ```cpp
-  str.assign(5, 'X'); // XXXXX
-  ```
-
 - `string& assign(const char* s, int n)`：把C风格字符串`s`的前`n`个字符赋值给当前字符串
-
-  ```cpp
-  str.assign("Hello World", 5);
-  ```
 
 - `string& assign(const char* s, int pos, int len = npos)`或`string& assign(const string& str, int pos, int len = npos)`：取从索引`pos`开始的`len`个字符赋值给当前字符串，不传参数`len`时取到字符串末尾
 
-  ```cpp
-  str.assign(str2, 1, 3);
-  str.assign("Hello", 1, 3);
-  ```
+```cpp
+string str;
+// 1. 使用运算符=赋值
+str = "Hello";
+string str2;
+str2 = str;
+string str3;
+str3 = 'H';
+
+// 2. 使用assign方法赋值
+str.assign("World");           // "World"
+str.assign(str2);              // "Hello"
+str.assign(5, 'X');            // "XXXXX"
+str.assign("Hello World", 5);  // "Hello"
+str.assign(str2, 1, 3);        // "ell"
+str.assign("Hello", 1, 3);     // "ell"
+```
+
+#### 子串获取
+
+子串获取主要通过`substr`方法实现：
+
+- `string substr(int pos = 0, int n = npos) const`：获取从`pos`开始的`n`个字符构成的子串；不传则获取到末尾
+
+```cpp
+string str = "Hello World";
+
+string sub1 = str.substr(6);  // "World"
+string sub2 = str.substr(6, 3);  // "Wor"
+```
 
 #### 字符串拼接
 
@@ -3979,53 +3970,38 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 - `string& operator+=(const char* s)`：拼接C风格字符串
 
-  ```cpp
-  string str;
-  str += "He";
-  ```
-
 - `string& operator+=(const char c)`：拼接单个字符`c`
 
-  ```cpp
-  str += 'l';
-  ```
-
 - `string& operator+=(const string& str)`：拼接另一个字符串`str`
-
-  ```cpp
-  string str2("lo");
-  str += str2;
-  ```
 
 使用方法`append`拼接：
 
 - `string& append(const char* s)`：拼接C风格字符串
 
-  ```cpp
-  str.append("He");
-  ```
-
 - `string& append(const string& str)`：拼接另一个字符串`str`
-
-  ```cpp
-  string str3("llo");
-  str.append(str3);
-  ```
 
 - `string& append(const char* s, int n)`：拼接C风格字符串`s`的前`n`个字符
 
-  ```cpp
-  str.append(" WWW", 2);
-  ```
-
 - `string& append(const char* s, int pos, int len = npos)`或`string& assign(const string& str, int pos, int len = npos)`：取从索引`pos`开始的`len`个字符拼接，不传参数`len`时取到字符串末尾
 
-  ```cpp
-  str.append("Worlddd", 1, 4);
-  
-  string str4("??!??");
-  str.append(str4, 2, 1);
-  ```
+```cpp
+string str;
+
+// 1. 使用运算符+=拼接
+str += "He";
+str += 'l';
+string str2("lo");
+str += str2;
+
+// 2. 使用append方法拼接
+str.append("He");				// "HelloHe"
+string str3("llo");
+str.append(str3);				// "HelloHello"
+str.append(" WWW", 2); 			// "HelloHello W"
+str.append("Worlddd", 1, 4); 	// "HelloHello World"
+string str4("??!??");
+str.append(str4, 2, 1); 		// "HelloHello World!"
+```
 
 #### 字符串查找
 
@@ -4033,48 +4009,45 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 - `int find(const string& str, int pos = 0) const`或`int find(const char* s, int pos = 0) const`：从`pos`开始，**向后**查找字符串`str`/`s`在给定字符串中的位置
 
-  ```cpp
-  string str = "Hello World Hello";
-  int pos;
-  
-  pos = str.find("Hello");    // 返回0（首次出现位置）
-  pos = str.find("World");    // 返回6
-  pos = str.find("hello");    // 返回-1（未找到）
-  pos = str.find("Hello", 1); // 从位置1开始找，返回12
-  ```
-
 反向查找用`rfind`：
 
 - `int rfind(const string& str, int pos = npos) const`或`int rfind(const char* s, int pos = npos) const`：从`pos`开始，**向前**查找字符串`str`/`s`在给定字符串中的位置
-
-  ```cpp
-  pos = str.rfind("Hello");   // 返回12（最后一次出现位置）
-  pos = str.rfind("ll", 5);    // 返回2
-  ```
 
 正向查找任意匹配字符用`find_first_of()`：
 
 - `int find_first_of(const string& str, int pos = 0) const`：查找任意匹配字符在字符串中的位置
 
-  ```cpp
-  pos = str.find_first_of("aeiou");  // 返回1（'e'所在的位置）
-  ```
-
 反向查找任意匹配字符用`find_last_of()`：
 
 - `int find_last_of(const string& str, int pos = npos) const`：查找任意匹配字符在字符串中的位置
 
-  ```cpp
-  pos = str.find_last_of("aeiou"); // 返回15（最后一个'o'所在的位置）
-  ```
-
-查找不匹配字符用`find_first_not_of()`：
+查找任意不匹配字符用`find_first_not_of()`：
 
 - `int find_first_not_of(const string& str, int pos = 0) const`：查找任意不匹配字符在字符串中的位置
 
-  ```cpp
-  pos = str.find_first_not_of("Helo "); // 返回6（第一个不匹配字符'W'所在的位置）
-  ```
+```cpp
+string str = "Hello World Hello";
+int pos;
+
+// 1. 正向查找替换
+pos = str.find("Hello");    // 返回0（首次出现位置）
+pos = str.find("World");    // 返回6
+pos = str.find("hello");    // 返回-1（未找到）
+pos = str.find("Hello", 1); // 从位置1开始找，返回12
+
+// 2. 反向查找替换
+pos = str.rfind("Hello");   // 返回12（最后一次出现位置）
+pos = str.rfind("ll", 5);    // 返回2
+
+// 3. 正向查找匹配任意字符
+pos = str.find_first_of("aeiou");  // 返回1（'e'所在的位置）
+
+// 4. 反向查找匹配任意字符
+pos = str.find_last_of("aeiou"); // 返回15（最后一个'o'所在的位置）
+
+// 5. 查找任意不匹配字符
+pos = str.find_first_not_of("Helo "); // 返回6（第一个不匹配字符'W'所在的位置）
+```
 
 #### 字符串替换
 
@@ -4082,37 +4055,35 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 - `string& replace(int pos, int len, const string& str)`或`string& replace(int pos, int len, const char* s)`：从`pos`位置开始，将`len`长度的子串替换为`str`/`s`
 
-  ```cpp
-  string str = "I like Java";
-  str.replace(7, 4, "C++");  // "I like C++"
-  str.replace(2, 4, "love");  // "I love C++"
-  ```
-
 - `string& replace(int pos, size_t len, const string& str, int subpos, int sublen)`：使用`str`的子串进行替换
-
-  ```cpp
-  string repl = "Python/JavaScript";
-  str.replace(7, 3, repl, 7, 10);  // "I love JavaScript"
-  ```
 
 - `string& replace(int pos, int len, int n, char c)`：用`n`个字符`c`替换
 
-  ```cpp
-  str.replace(0, 1, 3, '*');  // "*** love JavaScript"
-  ```
-
 - `string& replace(iterator i1, iterator i2, const string& str)`：使用迭代器范围指定替换位置
-
-  ```cpp
-  string::iterator it = str.begin() + 4;
-  str.replace(it, it+4, "hate");  // "*** hate JavaScript"
-  ```
 
 - `string& replace(iterator i1, iterator i2, int n, char c)`：用`n`个字符`c`填充
 
-  ```cpp
-  str.replace(str.end()-10, str.end(), 5, '!');  // "*** hate !!!!!"
-  ```
+```cpp
+string str = "I like Java";
+
+// 1. 替换子串
+str.replace(7, 4, "C++");  // "I like C++"
+str.replace(2, 4, "love");  // "I love C++"
+
+// 2. 用子串替换子串
+string repl = "Python/JavaScript";
+str.replace(7, 3, repl, 7, 10);  // "I love JavaScript"
+
+// 3. 用指定个数字符替换
+str.replace(0, 1, 3, '*');  // "*** love JavaScript"
+
+// 4. 迭代器范围指定替换
+string::iterator it = str.begin() + 4;
+str.replace(it, it+4, "hate");  // "*** hate JavaScript"
+
+// 5. 迭代器范围指定填充
+str.replace(str.end()-10, str.end(), 5, '!');  // "*** hate !!!!!"
+```
 
 #### 字符串插入
 
@@ -4120,49 +4091,44 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 - `string& insert(int pos, const char* s)`：在`pos`位置插入C风格字符串
 
-  ```cpp
-  string str("HelloWorld");
-  str.insert(5, " "); // Hello World
-  ```
-
-- `string& insert(int pos, const string& str)`：在`pos`位置插入另一个`string`
-
-  ```cpp
-  string str2("Hello");
-  str.insert(6, str2); // Hello HelloWorld
-  ```
+- `string& insert(int pos, const string& str)`：在`pos`位置插入字符串
 
 - `string& insert(int pos, const char* s, int len)`：在`pos`位置插入C风格字符串的前`len`个字符
 
-  ```cpp
-  str.insert(11, "***", 1); // Hello Hello*World
-  ```
-
-- `string& insert(int pos, const string& str, int pos2, int count = npos)`：在`pos`位置插入另一个`string`的子串
-
-  ```cpp
-  string str3("Say Hi");
-  str.insert(0, str3, 0, 4); // Say Hello Hello*World
-  ```
+- `string& insert(int pos, const string& str, int pos2, int count = npos)`：在`pos`位置插入另一个字符串的子串
 
 - `string& insert(int pos, int n, char c)`：在`pos`位置插入`n`个字符`c`
 
-  ```cpp
-  str.insert(15, 2, '*'); // Say Hello Hello***World
-  ```
-
 - `iterator insert(iterator pos, char c)`：在迭代器位置前插入字符`c`
-
-  ```cpp
-  str = "Warning";
-  str.insert(str.begin(), '!'); // !Warning
-  ```
 
 - `void insert(iterator pos, int n, char c)`：在迭代器位置前插入`n`个字符`c`
 
-  ```cpp
-  str.insert(str.end(), 2, '?'); // !Warning??
-  ```
+```cpp
+string str("HelloWorld");
+// 1. 插入C风格字符串
+str.insert(5, " "); // Hello World
+
+// 2. 在指定位置插入字符串
+string str2("Hello");
+str.insert(6, str2); // Hello HelloWorld
+
+// 3. 在指定位置插入指定个数的C风格字符串
+str.insert(11, "***", 1); // Hello Hello*World
+
+// 4. 在指定位置插入另一个字符串的子串
+string str3("Say Hi");
+str.insert(0, str3, 0, 4); // Say Hello Hello*World
+
+// 5. 在指定位置插入指定个数的字符
+str.insert(15, 2, '*'); // Say Hello Hello***World
+
+// 6. 在迭代器位置前插入字符
+str = "Warning";
+str.insert(str.begin(), '!'); // !Warning
+
+// 7. 在迭代器位置前插入指定个数的字符
+str.insert(str.end(), 2, '?'); // !Warning??
+```
 
 #### 字符串删除
 
@@ -4170,24 +4136,24 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
 
 - `string& erase(int pos = 0, int n = npos)`：删除从`pos`开始的`n`个字符，不指定则删除到末尾
 
-  ```cpp
-  string str("Hello, World!");
-  str.erase(7, 5); // Hello, !
-  ```
-
 - `iterator erase(iterator pos)`：删除迭代器指向的字符
-
-  ```cpp
-  str = "Programming";
-  auto it = str.erase(str.begin() + 3); // Proramming
-  ```
 
 - `iterator erase(iterator first, iterator last)`：删除迭代器范围[first, last)的字符
 
-  ```cpp
-  str = "This is an example";
-  it = str.erase(str.begin() + 5, str.begin() + 11); // This example
-  ```
+
+```cpp
+string str("Hello, World!");
+// 1. 删除指定位置指定个数字符
+str.erase(7, 5); // Hello, !
+
+// 2. 删除迭代器指向字符
+str = "Programming";
+auto it = str.erase(str.begin() + 3); // Proramming
+
+// 3. 删除迭代器范围的字符
+str = "This is an example";
+it = str.erase(str.begin() + 5, str.begin() + 11); // This example
+```
 
 #### 字符访问
 
@@ -4207,36 +4173,191 @@ STL（标准模板库，Standard Template Library）是C++标准库的重要组�
   str.at(0) = 'w';
   ```
 
-#### 子串获取
-
 #### 字符串比较
 
 `string`提供了`>`、`<`、`==`、`>=`、`<=`、`!=`等比较运算符，还提供了`compare()`函数，支持多参数处理，支持用索引值和长度截取子串进行比较
 
 - `int compare(const string& str) const`或`int compare(const char* s) const`：完整字符串比较
 
-  ```cpp
-  string s = "Hello World";
-  s.compare("Hello World");  // 返回0
-  ```
-
 - `int compare(int pos, int len, const string& str) const`或`int compare(int pos, int len, const char* s) const`：子串比较
 
-  ```cpp
-  s.compare(6, 5, "World"); // 比较"World"和"World"，返回0
-  ```
-
-- `int compare(int pos, int len, const string& str, int subpos, int sublen) const`或`int compare(int pos, int len, char* s, int subpos, int sublen) const`：子串与子串比较
-
-  ```cpp
-  s.compare(0, 5, "Hello Earth", 0, 5); // 比较"Hello"和"Hello"，返回0
-  ```
+- `int compare(int pos, int len, const string& str, int subpos, int sublen) const`或`int compare(int pos, int len, char* s, int subpos, int sublen) const`：子串和子串比较
 
 - `int compare(int pos, int len, const char* s, int = npos) const`：与C风格字符串子串比较
 
-  ```cpp
-  s.compare(0, 11, "Hello!", 5); // 返回>0（"Hello World" > "Hello"）
-  ```
 
+```cpp
+string s = "Hello World";
+// 1.完整字符串比较
+s.compare("Hello World");  // 返回0
 
+// 2.子串比较
+s.compare(6, 5, "World"); // 比较"World"和"World"，返回0
 
+// 3.子串和子串比较
+s.compare(0, 5, "Hello Earth", 0, 5); // 比较"Hello"和"Hello"，返回0
+
+// 4.与C风格字符串比较
+s.compare(0, 11, "Hello!", 5); // 返回>0（"Hello World" > "Hello"）
+```
+
+### vector容器
+
+vector是C++标准模板库中最常用的容器之一，提供了**动态数组**的功能，能够自动管理内存并在需要时动态调整大小（并不是在原有空间后续接新空间，而是找一块更大的内存空间将原数据拷贝到新空间，并释放原有空间）。
+
+#### 构造函数
+
+- `vector() noexcept`：默认构造函数，构造空容器
+- `explicit vector(int n, const T& value = T())`：用`n`个`value`构造容器
+- `vector(InputIterator first, InputIterator last)`：用其他容器的范围构造新容器
+- `vector(const vector& x)`：拷贝构造函数
+- `vector(vector&& x) noexcept`：移动拷贝构造函数(C++11)
+- `vector(initializer_list<T> il)`：初始化列表构造函数(C++11)
+
+```cpp
+// 1. 默认构造函数：创建空vector
+vector<int> v1;
+
+// 2. 指定大小和初始值：创建包含n个元素的vector，每个元素初始化为val
+vector<int> v2(5);       // 5个0
+vector<int> v3(5, 10);   // 5个10
+
+// 3. 范围构造函数：用迭代器范围[first,last)初始化
+vector<int> v4(v3.begin(), v3.end());
+
+// 4. 拷贝构造函数：用另一个vector初始化
+vector<int> v5(v4);
+
+// 5. 列表初始化 (C++11)
+vector<int> v6 = {1, 2, 3, 4, 5};
+
+// 6. 移动构造函数 (C++11)
+vector<int> v7(std::move(v6)); // v6现在为空
+```
+
+#### 赋值操作
+
+可以用`=`运算符进行赋值：
+
+- `vector& operator=(const vector& x)`：拷贝赋值
+- `vector& operator=(vector&& x) noexcept`：移动拷贝赋值(C++11)
+- `vector& operator=(initializer_list<T> il)`：初始化列表赋值(C++11)
+- `void assign(InputIterator first, InputIterator last)`：用另一个容器的范围赋值
+
+也可以用assign方法赋值：
+
+- `void assign(int n, const T& value)`：用`n`个`value`填充容器
+- `void assign(initializer_list<T> il)`：初始化列表赋值(C++11)
+
+```cpp
+vector<int> v1 = {1, 2, 3};
+vector<int> v2;
+
+// 1. 拷贝赋值
+v2 = v1;
+
+// 2. 移动赋值 (C++11)
+v2 = std::move(v1); // v1现在为空
+
+// 3. 范围赋值：用迭代器范围[first,last)赋值
+vector<int> v3;
+v3.assign(v2.begin(), v2.end());
+
+// 4. 填充赋值：用n个val赋值
+v3.assign(5, 10); // 5个10
+
+// 5. 列表赋值 (C++11)
+v3 = {1, 2, 3, 4, 5};
+```
+
+#### 容量和大小
+
+`vector`容器提供了多种查询和修改容量的方法：
+
+- `int size() const noexcept`：返回元素数量
+- `int max_size() const noexcept`：返回最大可能元素数量，取决于系统和实现
+- `int capacity() const noexcept`：返回当前分配的存储容量
+- `bool empty() const noexcept`：检查是否为空
+- `void resize(int newsize)`：调整容器大小，不足的元素用默认值补齐
+- `void resize(int newsize, const T& value)`：调整容器大小，不足的元素用`value`补齐
+- `void reserve(int n)`：预留存储空间，避免频繁重新分配
+- `void shrink_to_fit()`：减少容量以适应大小(C++11)
+
+```cpp
+vector<int> v = { 1, 2, 3, 4, 5 };
+
+// 1. 当前元素数量
+cout << v.size() <<endl;      // 输出5
+
+// 2. 最大可能元素数量
+cout << v.max_size() << endl;  // 取决于系统和实现
+
+// 3. 当前分配的存储容量
+cout << v.capacity() << endl;  // ≥5
+
+// 4. 检查是否为空
+cout << v.empty() << endl;     // 0 (false)
+
+// 5. 调整大小
+v.resize(10);         // 大小变为10，新增元素初始化为0
+v.resize(15, 100);    // 大小变为15，新增元素初始化为100
+v.resize(3);          // 大小变为3，多余元素被删除
+
+// 6. 预留空间
+v.reserve(100);       
+cout << v.capacity() << endl;  // 100
+```
+
+#### 元素插入
+
+- `void push_back(const T& value)`：在尾部插入元素
+- `void push_back(T&& value)`：在尾部移动插入元素(C++11)
+- `iterator insert(const iterator position, const T& value)`：在迭代器指定位置插入元素
+- `iterator insert(const iterator position, T&& value)`：在迭代器指定位置移动插入元素(C++11)
+- `iterator insert(const iterator position, int n, const T& value)`：在迭代器指定位置插入n个元素value
+- `iterator insert(const iterator position, InputIterator first, InputIterator last)`：在迭代器指定位置插入另一个迭代器范围
+- `iterator insert(const iterator position, initializer_list<T> il)`：在迭代器指定位置插入初始化列表(C++11)
+
+```cpp
+vector<int> v = {1, 2};
+
+// 1. 尾部添加元素
+v.push_back(3);       // v: {1,2,3}
+
+// 2. 在指定位置插入元素
+v.insert(v.begin(), 0);       // v: {0,1,2,3}
+v.insert(v.begin()+2, 5);     // v: {0,1,5,2,3}
+v.insert(v.end(), 3, 10);     // v: {0,1,5,2,3,10,10,10}
+
+// 3. 插入范围
+vector<int> v2 = {7,8,9};
+v.insert(v.begin()+1, v2.begin(), v2.end()); // v: {0,7,8,9,1,5,2,3,10,10,10}
+```
+
+#### 元素删除
+
+- `void pop_back()`：在尾部删除元素
+- `iterator erase(const_iterator position)`：删除迭代器指定位置元素
+- `iterator erase(const_iterator first, const_iterator last)`：删除迭代器指定位置
+- `void clear() noexcept`：清空容器
+- `void swap(vector& x) noexcept`：交换容器内容(C++11)
+
+```cpp
+vector<int> v = {1, 2, 3, 4, 5, 6};
+
+// 1. 尾部删除元素
+v.pop_back();         // v: {1,2,3,4,5}
+
+// 2. 删除指定位置元素
+v.erase(v.begin());           		// v: {2,3,4,5}
+v.erase(v.begin()+1, v.begin()+3); 	// v: {2,5}
+
+// 3. 清空vector
+v.clear();            // v: {}
+```
+
+#### 数据访问
+
+#### 互换容器
+
+#### 预留空间
