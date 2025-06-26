@@ -4203,15 +4203,16 @@ s.compare(0, 11, "Hello!", 5); // 返回>0（"Hello World" > "Hello"）
 
 ### vector容器
 
-vector是C++标准模板库中最常用的容器之一，提供了**动态数组**的功能，能够自动管理内存并在需要时动态调整大小（并不是在原有空间后续接新空间，而是找一块更大的内存空间将原数据拷贝到新空间，并释放原有空间）。
+vector是C++标准模板库中最常用的容器之一，提供了**动态数组**的功能，能够自动管理内存并在需要时动态调整大小（并不是在原有空间后续接新空间，而是找一块更大的内存空间将原数据拷贝到新空间，并释放原有空间）
 
 #### 构造函数
 
-- `vector() noexcept`：默认构造函数，构造空容器
-- `explicit vector(int n, const T& value = T())`：用`n`个`value`构造容器
+- `vector()`：默认构造函数，构造空容器
+- `vector(int n)`：用`n`个默认值构造队列
+- `vector(int n, const T& value = T())`：用`n`个`value`构造容器
 - `vector(InputIterator first, InputIterator last)`：用其他容器的范围构造新容器
 - `vector(const vector& x)`：拷贝构造函数
-- `vector(vector&& x) noexcept`：移动拷贝构造函数(C++11)
+- `vector(vector&& x) `：移动拷贝构造函数(C++11)
 - `vector(initializer_list<T> il)`：初始化列表构造函数(C++11)
 
 ```cpp
@@ -4232,7 +4233,7 @@ vector<int> v5(v4);
 vector<int> v6 = {1, 2, 3, 4, 5};
 
 // 6. 移动构造函数 (C++11)
-vector<int> v7(std::move(v6)); // v6现在为空
+vector<int> v7(move(v6)); // v6现在为空
 ```
 
 #### 赋值操作
@@ -4240,7 +4241,7 @@ vector<int> v7(std::move(v6)); // v6现在为空
 可以用`=`运算符进行赋值：
 
 - `vector& operator=(const vector& x)`：拷贝赋值
-- `vector& operator=(vector&& x) noexcept`：移动拷贝赋值(C++11)
+- `vector& operator=(vector&& x)`：移动拷贝赋值(C++11)
 - `vector& operator=(initializer_list<T> il)`：初始化列表赋值(C++11)
 - `void assign(InputIterator first, InputIterator last)`：用另一个容器的范围赋值
 
@@ -4274,10 +4275,10 @@ v3 = {1, 2, 3, 4, 5};
 
 `vector`容器提供了多种查询和修改容量的方法：
 
-- `int size() const noexcept`：返回元素数量
-- `int max_size() const noexcept`：返回最大可能元素数量，取决于系统和实现
-- `int capacity() const noexcept`：返回当前分配的存储容量
-- `bool empty() const noexcept`：检查是否为空
+- `int size() const`：返回元素数量
+- `int max_size() const`：返回最大可能元素数量，取决于系统和实现
+- `int capacity() const`：返回当前分配的存储容量
+- `bool empty() const`：检查是否为空
 - `void resize(int newsize)`：调整容器大小，不足的元素用默认值补齐
 - `void resize(int newsize, const T& value)`：调整容器大小，不足的元素用`value`补齐
 - `void reserve(int n)`：预留存储空间，避免频繁重新分配
@@ -4337,10 +4338,12 @@ v.insert(v.begin()+1, v2.begin(), v2.end()); // v: {0,7,8,9,1,5,2,3,10,10,10}
 #### 元素删除
 
 - `void pop_back()`：在尾部删除元素
-- `iterator erase(const_iterator position)`：删除迭代器指定位置元素
-- `iterator erase(const_iterator first, const_iterator last)`：删除迭代器指定位置
-- `void clear() noexcept`：清空容器
-- `void swap(vector& x) noexcept`：交换容器内容(C++11)
+
+- `iterator erase(const iterator position)`：删除迭代器指定位置元素
+
+  `iterator erase(const iterator first, const_iterator last)`：删除迭代器指定位置
+
+- `void clear()`：清空容器
 
 ```cpp
 vector<int> v = {1, 2, 3, 4, 5, 6};
@@ -4358,6 +4361,101 @@ v.clear();            // v: {}
 
 #### 数据访问
 
+用下标运算符`[]`访问数据：
+
+- `reference operator[](int n)`或`const_reference operator[](int n) const`：通过下标访问元素，不检查边界
+
+用`at`方法访问：
+
+- `reference at(int n)`或`const_reference at(int n) const`：访问指定索引的元素，检查边界
+
+用`front`方法和`end`方法访问首尾元素：
+
+- `reference front()`或`const_reference front() const`：访问第一个元素
+- `reference back()`或`const_reference back() const`：访问最后一个元素
+
+```cpp
+vector<int> v = {1, 2, 3, 4, 5};
+
+// 1. 下标访问 (不检查边界)
+cout << v[2] << endl;        // 输出3
+v[1] = 10;           		 // v: {1,10,3,4,5}
+
+// 2. at()访问 (越界抛异常)
+cout << v.at(3) << endl;     // 输出4
+
+// 3. 访问首尾元素
+cout << v.front() << endl;   // 输出1
+cout << v.back() << endl;    // 输出5
+
+// 4. 获取底层数组指针
+int* p = v.data();   		 // 指向第一个元素的指针
+cout << *p << endl;          // 输出1
+```
+
 #### 互换容器
 
-#### 预留空间
+用`swap`方法交换两个vector的内容：
+
+- `void swap(vector& other)`：交换容器内容(C++11)
+
+```cpp
+vector<int> v1 = { 1, 2, 3 };
+vector<int> v2 = { 4, 5, 6, 7 };
+
+cout << "交换前:" << endl;
+cout << "v1: "; for (int i : v1) cout << i << " "; cout << endl;
+cout << "v2: "; for (int i : v2) cout << i << " "; cout << endl;
+
+v1.swap(v2);  // 交换v1和v2的内容
+
+cout << "n交换后:" << endl;
+cout << "v1: "; for (int i : v1) cout << i << " "; cout << endl;
+cout << "v2: "; for (int i : v2) cout << i << " "; cout << endl;
+```
+
+### deque容器
+
+`deque`（双端队列）是C++标准模板库中的一个重要容器，它结合了`vector`和`list`的优点，支持在**两端**高效地插入和删除元素
+
+#### 构造函数
+
+- `deque()`：默认构造函数，构造空队列
+- `deque(int n)`：用`n`个默认值构造队列
+- `deque(int n, const T& value = T())`：用`n`个`value`构造队列
+- `deque(InputIterator first, InputIterator last)`：用其他容器的范围构造新容器
+- `deque(const deque& x)`：拷贝构造函数
+- `deque(const deque&& x)`：移动拷贝构造函数(C++11)
+- `deque(std::initializer_list<T> il)`：初始化列表构造函数(C++11)
+
+```cpp
+// 1. 默认构造
+deque<int> dq1;
+
+// 2. 填充构造
+deque<int> dq2(5);         // 5个0
+deque<int> dq3(5, 10);     // 5个10
+
+// 3. 范围构造
+int arr[] = { 1, 2, 3, 4, 5 };
+deque<int> dq4(arr, arr + 3);  // 1,2,3
+
+// 4. 拷贝构造
+deque<int> dq5(dq4);       // 1,2,3
+
+// 5. 初始化列表构造
+deque<int> dq7 = { 6, 7, 8, 9 };
+
+// 6. 移动拷贝构造
+deque<int> dq6(move(dq5)); // dq5现在为空
+```
+
+#### 赋值操作
+
+#### 容量和大小
+
+#### 元素插入
+
+#### 元素删除
+
+#### 数据访问
