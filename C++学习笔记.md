@@ -4276,7 +4276,7 @@ v3 = {1, 2, 3, 4, 5};
 `vector`容器提供了多种查询和修改容量的方法：
 
 - `int size() const`：返回元素数量
-- `int max_size() const`：返回最大可能元素数量，取决于系统和实现
+- `int max_size() const`：返回最大可能元素数量的理论值
 - `int capacity() const`：返回当前分配的存储容量
 - `bool empty() const`：检查是否为空
 - `void resize(int newsize)`：调整容器大小，不足的元素用默认值补齐
@@ -4313,11 +4313,11 @@ cout << v.capacity() << endl;  // 100
 
 - `void push_back(const T& value)`：在尾部插入元素
 - `void push_back(T&& value)`：在尾部移动插入元素(C++11)
-- `iterator insert(const iterator position, const T& value)`：在迭代器指定位置插入元素
-- `iterator insert(const iterator position, T&& value)`：在迭代器指定位置移动插入元素(C++11)
-- `iterator insert(const iterator position, int n, const T& value)`：在迭代器指定位置插入n个元素value
-- `iterator insert(const iterator position, InputIterator first, InputIterator last)`：在迭代器指定位置插入另一个迭代器范围
-- `iterator insert(const iterator position, initializer_list<T> il)`：在迭代器指定位置插入初始化列表(C++11)
+- `iterator insert(const_iterator position, const T& value)`：在迭代器指定位置插入元素
+- `iterator insert(const_iterator position, T&& value)`：在迭代器指定位置移动插入元素(C++11)
+- `iterator insert(const_iterator position, int n, const T& value)`：在迭代器指定位置插入n个元素value
+- `iterator insert(const_iterator position, InputIterator first, InputIterator last)`：在迭代器指定位置插入另一个迭代器范围
+- `iterator insert(const_iterator position, initializer_list<T> il)`：在迭代器指定位置插入初始化列表(C++11)
 
 ```cpp
 vector<int> v = {1, 2};
@@ -4339,9 +4339,9 @@ v.insert(v.begin()+1, v2.begin(), v2.end()); // v: {0,7,8,9,1,5,2,3,10,10,10}
 
 - `void pop_back()`：在尾部删除元素
 
-- `iterator erase(const iterator position)`：删除迭代器指定位置元素
+- `iterator erase(const_iterator position)`：删除迭代器指定位置元素
 
-  `iterator erase(const iterator first, const_iterator last)`：删除迭代器指定位置
+  `iterator erase(const_iterator first, const_iterator last)`：删除迭代器指定位置
 
 - `void clear()`：清空容器
 
@@ -4422,7 +4422,7 @@ cout << "v2: "; for (int i : v2) cout << i << " "; cout << endl;
 
 - `deque()`：默认构造函数，构造空队列
 - `deque(int n)`：用`n`个默认值构造队列
-- `deque(int n, const T& value = T())`：用`n`个`value`构造队列
+- `deque(int n, const T& value = T())`：用`n`个`value`构造
 - `deque(InputIterator first, InputIterator last)`：用其他容器的范围构造新容器
 - `deque(const deque& x)`：拷贝构造函数
 - `deque(const deque&& x)`：移动拷贝构造函数(C++11)
@@ -4452,10 +4452,185 @@ deque<int> dq6(move(dq5)); // dq5现在为空
 
 #### 赋值操作
 
+可以用运算符`=`进行赋值：
+
+- `deque& operator=(const deque& other)`：拷贝赋值
+- `deque& operator=(deque&& other)`：移动赋值(C++11)
+- `deque& operator=(initializer_list<T> ilist)`：初始化列表赋值
+
+```cpp
+// 1. 拷贝赋值
+deque<int> dq1 = {1, 2, 3};
+deque<int> dq2;
+dq2 = dq1;  // 拷贝赋值
+
+// 2. 移动赋值
+deque<int> dq3;
+dq3 = move(dq1);  // dq1现在为空
+
+// 3. 初始化列表赋值
+deque<int> dq4;
+dq4 = {4, 5, 6, 7};
+```
+
+也可以用`assign`方法进行赋值：
+
+- `void assign(int n, const T& value)`：用`n`个`value`构造
+- `void assign(InputIt first, InputIt last)`：把其他容器的范围赋值给容器
+- `void assign(initializer_list<T> ilist)`：初始化列表赋值函数(C++11)
+
+```cpp
+deque<int> dq;
+    
+// 1. 填充赋值
+dq.assign(5, 10);  // 5个10
+for (auto i : dq) cout << i << " ";  // 输出: 10 10 10 10 10
+
+// 2. 范围赋值
+int arr[] = {1, 3, 5, 7, 9};
+dq.assign(arr, arr + 3);
+for (auto i : dq) cout << i << " ";  // 输出: 1 3 5
+
+// 3. 初始化列表赋值
+dq.assign({2, 4, 6, 8});
+for (auto i : dq) cout << i << " ";  // 输出: 2 4 6 8
+```
+
 #### 容量和大小
+
+- `int size() const`：返回容器中当前元素的数量
+- `bool empty() const`：检查容器是否为空
+- `int max_size() const`：返回可容纳的最大元素数量的理论值
+- `void resize(size_type count)`：改变容器中元素的数量
+- `void resize(int count, const T& value)`：改变容器中元素的数量，不足的元素用`value`填充
+
+```cpp
+deque<int> dq = { 1, 2, 3, 4, 5 };
+
+// 1. size()
+cout << dq.size() << endl;  // 输出: 5
+
+// 2. empty()
+cout << dq.empty() << endl;  // 输出: false
+
+// 3. max_size()
+cout << dq.max_size() << endl;  // 输出: 一个很大的数
+
+// 4. resize() - 扩大
+dq.resize(7);
+for (auto i : dq) cout << i << " ";  // 输出: 1 2 3 4 5 0 0
+
+// 5. resize() - 缩小
+dq.resize(3);
+for (auto i : dq) cout << i << " ";  // 输出: 1 2 3
+
+// 6. resize() - 带默认值
+dq.resize(5, 10);
+for (auto i : dq) cout << i << " ";  // 输出: 1 2 3 10 10
+```
 
 #### 元素插入
 
+- `void push_back(const T& value)`：在末尾插入一个元素
+- `void push_back(T&& value)`：在末尾移动插入一个元素(C++11)
+- `void emplace_back(Args&&... args)`：在末尾构造一个元素(C++11)
+- `void push_front(const T& value)`：在头部插入一个元素
+- `void push_front(T&& value)`：在头部移动插入一个元素(C++11)
+- `void emplace_front(Args&&... args)`：在头部构造一个元素(C++11)
+- `iterator insert(const_iterator pos, const T& value)`：在迭代器的`pos`位置插入一个元素
+- `iterator insert(const_iterator pos, T&& value)`：在迭代器的`pos`位置移动插入一个元素(C++11)
+- `iterator insert(const_iterator pos, int count, const T& value)`：在迭代器的`pos`位置插入`n`个`value`
+- `iterator insert(const_iterator pos, InputIt first, InputIt last)`：在迭代器的`pos`位置插入多个元素
+- `iterator insert(const_iterator pos, initializer_list<T> ilist)`：在迭代器的`pos`位置插入(C++11)
+- `iterator emplace(const_iterator pos, Args&&... args)`：在迭代器的`pos`位置构造一个元素(C++11)
+
+```cpp
+// 1. 尾部插入
+dq.push_back(5);       // {2, 3, 4, 5}
+dq.emplace_back(6);    // {2, 3, 4, 5, 6}
+
+// 2. 头部插入
+dq.push_front(1);      // {1, 2, 3, 4, 5, 6}
+dq.emplace_front(0);   // {0, 1, 2, 3, 4, 5, 6}
+
+// 3. 任意位置插入
+auto it = dq.begin() + 3;
+dq.insert(it, 99);     // {0, 1, 2, 99, 3, 4, 5, 6}
+
+// 插入多个相同元素
+dq.insert(dq.end(), 3, 7);  // {0, 1, 2, 99, 3, 4, 5, 6, 7, 7, 7}
+
+// 插入范围
+int arr[] = { 10, 11, 12 };
+dq.insert(dq.begin() + 5, arr, arr + 3);  // {0, 1, 2, 99, 3, 10, 11, 12, 4, 5, 6, 7, 7, 7}
+
+// emplace构造
+dq.emplace(dq.begin() + 2, 55);  // {0, 1, 55, 2, 99, 3, 10, 11, 12, 4, 5, 6, 7, 7, 7}
+```
+
 #### 元素删除
 
+- `void pop_back()`：删除末尾的元素
+- `void pop_front()`：删除开头的元素
+- `iterator erase(const_iterator pos)`：删除指定位置的元素
+- `iterator erase(const_iterator first, const_iterator last)`：删除指定迭代器范围的元素
+- `void clear()`：清空容器
+
+```cpp
+deque<int> dq = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+// 1. 尾部删除
+dq.pop_back();
+for (auto i : dq) cout << i << " ";  // 0 1 2 3 4 5 6 7 8
+
+// 2. 头部删除
+dq.pop_front();
+for (auto i : dq) cout << i << " ";  // 1 2 3 4 5 6 7 8
+
+// 3. 删除单个元素
+auto it = dq.begin() + 3;
+dq.erase(it);
+for (auto i : dq) cout << i << " ";  // 1 2 3 5 6 7 8
+
+// 4. 删除范围元素
+dq.erase(dq.begin() + 1, dq.begin() + 4); // 删除2,3,5
+for (auto i : dq) cout << i << " ";  // 1 6 7 8
+
+// 5. 清空整个deque
+dq.clear();
+```
+
 #### 数据访问
+
+使用下标运算符`[]`访问元素：
+
+- `reference operator[](int n)`或`const_reference operator[](int n) const`：通过下标访问元素，不检查边界
+
+用`at`方法访问：
+
+- `reference at(int n)`或`const_reference at(int n) const`：访问指定索引的元素，检查边界
+
+用`front`方法和`end`方法访问首尾元素：
+
+- `reference front()`或`const_reference front() const`：访问第一个元素
+- `reference back()`或`const_reference back() const`：访问最后一个元素
+
+```cpp
+deque<int> dq = { 1, 2, 3, 4, 5 };
+
+// 1. 下标访问 (不检查边界)
+cout << dq[2] << endl;        // 输出3
+dq[1] = 10;           		  // dq: {1,10,3,4,5}
+
+// 2. at()访问 (越界抛异常)
+cout << dq.at(3) << endl;     // 输出4
+
+// 3. 访问首尾元素
+cout << dq.front() << endl;   // 输出1
+cout << dq.back() << endl;    // 输出5
+```
+
+### stack容器
+
+### queue容器
+
