@@ -1152,40 +1152,210 @@ for (auto i = range.first; i != range.second; ++i) {
 - `void erase(iterator pos)`：删除`pos`位置的元素
 - `void erase(InputIterator first, InputIterator last)`：删除迭代器范围内的元素
 - `int erase(const T& value)`：删除所有值为`value`的元素，返回删除元素个数
+- `void swap(set& other)`：交换两个容器
 - `void clear()`：清空容器
 
 ```cpp
 set<int> nums;
 
-// insert()插入
+// 1. insert()插入
 auto ret = nums.insert(10);
 if (ret.second) {
     cout << "插入成功: " << *ret.first << endl;
 }
 
-// 带提示插入
+// 2. 带提示插入
 auto hint = nums.begin();
 nums.insert(hint, 100);  // 快速插入提示
 
-// 查看插入结果
-for (int n : nums) {
-    cout << n << " ";  // 输出: 5 10
-}
-
-// erase()删除
+// 3. erase()删除
 nums.erase(5);  // 通过值删除
 auto it = nums.find(10);
 if (it != nums.end()) {
     nums.erase(it);  // 通过迭代器删除
 }
 
-// multiset的erase()删除
+// 4. multiset的erase()删除
 multiset<int> mnums = { 1, 1, 2, 2, 2, 3 };
 int erased = mnums.erase(2);  // 删除所有2
 cout << "\n删除了 " << erased << " 个2" << endl;  // 输出: 删除了 3 个2
 
-// clear()清空
+// 5. swap()交换两个集合
+set<int> new_nums;
+nums.swap(new_nums);
+
+// 6. clear()清空
 mnums.clear();
 cout << "清空后大小: " << mnums.size() << endl;  // 输出: 0
+```
+
+### map/multimap容器
+
+`map`和`multimap`是C++标准模板库中的关联容器，基于**红黑树**实现，用于储存键值对，具有以下特征：
+
+- **唯一键**：每个键只能出现一次
+- **自动排序**：元素总是按照键的特定排序准则自动排序
+- **高效查找**：基于红黑树实现，查找时间复杂度为O(log n)
+- **键不可修改**：键的值不能被直接修改，只能删除后重新插入
+
+`multimap`的特性和`map`类似，除了：
+
+- **允许重复键**：可以包含多个键相同的元素
+- **没有`operator[]`和`at()`**：因为键不唯一，无法直接通过键访问值
+
+#### 构造函数
+
+- `map()`：默认构造函数
+- `explicit map(const Compare& comp)`：指定比较函数的构造函数
+- `map(InputIterator first, InputIterator last)`：用迭代器范围构造函数
+- `map(InputIterator first, InputIterator last, const Compare& comp)`：指定比较函数的迭代器范围构造函数
+- `map(initializer_list<pair<const Key, T>> init)`：初始化列表构造函数(C++11)
+- `map(const map& other)`：拷贝构造函数
+- `map(map&& other)`：移动拷贝构造函数(C++11)
+
+```cpp
+bool myCompare(const string& a, const string& b) {
+    return a.length() < b.length();
+}
+
+// 1. 默认构造
+map<string, int> m1;
+
+// 2. 指定比较函数
+map<string, int, bool(*)(const string&, const string&)> m2(myCompare); // 按键长度排序
+
+// 3. 迭代器范围构造
+vector<pair<string, int>> v = { {"apple", 5}, {"banana", 3} };
+map<string, int> m3(v.begin(), v.end());
+
+// 4. 初始化列表构造
+map<string, int> m4 = { {"apple", 5}, {"banana", 3} };
+
+// 5. 拷贝构造
+map<string, int> m5(m4);
+```
+
+#### 容量和大小
+
+- `bool empty() const`：判断是否为空
+- `size_type size() const`：返回元素个数
+- `size_type max_size() const`：返回最大可能元素数量的理论值
+
+```cpp
+map<string, int> fruits = {{"apple", 5}, {"banana", 3}};
+
+if (!fruits.empty()) {
+    cout << "元素数量: " << fruits.size() << endl;  // 输出: 元素数量: 2
+}
+
+cout << "理论最大容量: " << fruits.max_size() << endl;  // 输出一个很大的数值
+```
+
+#### 元素访问
+
+- `T& operator[](const Key& key)`：通过键访问值，如果键不存在则插入
+- `T& at(const Key& key)`：通过键访问值，如果键不存在则抛出异常
+- `iterator find(const Key& key)`：查找键为`key`的元素
+- `size_type count(const Key& key) const`：返回键为`key`的元素个数
+- `iterator lower_bound(const Key& key)`：返回第一个键不小于`key`的元素
+- `iterator upper_bound(const Key& key)`：返回第一个键大于`key`的元素
+- `pair<iterator,iterator> equal_range(const Key& key)`：返回键等于`key`的范围
+
+```cpp
+map<string, int> fruits = { {"apple", 5}, {"banana", 3} };
+
+// 1. operator[]访问
+fruits["apple"] = 10;  // 修改已有键的值
+fruits["orange"] = 7;  // 插入新键值对
+
+// 2. at()访问
+try {
+    cout << "banana: " << fruits.at("banana") << endl;  // 输出: 3
+    cout << fruits.at("pear") << endl;  // 抛出out_of_range异常
+} catch (const out_of_range& e) {
+    cout << "键不存在: " << e.what() << endl;
+}
+
+// 3. find()查找
+auto it = fruits.find("apple");
+if (it != fruits.end()) {
+    cout << "找到: " << it->first << " => " << it->second << endl;
+}
+
+// 4. count()统计
+cout << "apple出现次数: " << fruits.count("apple") << endl;  // 输出: 1
+
+// 5. lower_bound()/upper_bound()
+auto lb = fruits.lower_bound("a");       // 第一个键 >= "a" 的元素
+auto ub = fruits.upper_bound("banana");  // 第一个键 <= "banana" 的元素
+for (auto i = lb; i != ub; ++i) {
+    cout << i->first << " : " << i->second << endl;
+}
+
+// 6. equal_range()查找相同元素的范围
+auto range = fruits.equal_range("apple");
+for (auto i = range.first; i != range.second; ++i) {
+    cout << i->first << " : " << i->second << endl;
+}
+```
+
+#### 元素修改
+
+- `pair<iterator,bool> insert(const value_type& value)`：插入元素，返回pair
+- `iterator insert(iterator hint, const value_type& value)`：带提示插入
+- `void erase(iterator pos)`：删除pos位置的元素
+- `void erase(iterator first, iterator last)`：删除迭代器范围内的元素
+- `size_type erase(const Key& key)`：删除键为key的元素，返回删除元素个数
+- `void swap(set& other)`：交换两个容器
+- `void clear()`：清空容器
+
+```cpp
+map<string, int> fruits;
+
+// 1. insert()插入
+auto ret = fruits.insert({ "apple", 5 });
+if (ret.second) {
+    cout << "插入成功: " << ret.first->first << " : " << ret.first->second << endl;
+}
+
+// 2. 带提示插入
+auto hint = fruits.begin();
+fruits.insert(hint, { "banana", 3 });
+
+// 3. emplace()直接构造元素(C++11)
+fruits.emplace("orange", 7);
+
+// 4. erase()删除
+fruits.erase("apple");  // 通过键删除
+auto it = fruits.find("banana");
+if (it != fruits.end()) {
+    fruits.erase(it);  // 通过迭代器删除
+}
+
+// 5. swap()交换两个容器
+map<string, int> new_fruits;
+fruits.swap(new_fruits);
+
+// 6. clear()清空
+fruits.clear();
+```
+
+#### multimap特有操作
+
+- **没有`operator[]`和`at()`**：因为键不唯一，无法直接通过键访问值
+
+```cpp
+multimap<string, int> fruits = {
+    {"apple", 5}, {"apple", 7}, {"banana", 3}
+};
+
+// 1. 查找所有相同键的元素
+auto range = fruits.equal_range("apple");
+for (auto it = range.first; it != range.second; ++it) {
+    cout << it->first << " : " << it->second << endl;
+}
+
+// 2. 统计相同键的数量
+cout << "apple出现次数: " << fruits.count("apple") << endl;  // 输出: 2
 ```
 
