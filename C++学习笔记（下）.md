@@ -651,7 +651,7 @@ for (auto i : dq) cout << i << " ";  // 输出: 2 4 6 8
 - `int size() const`：返回容器中当前元素的数量
 - `bool empty() const`：检查容器是否为空
 - `int max_size() const`：返回可容纳的最大元素数量的理论值
-- `void resize(size_type count)`：改变容器中元素的数量
+- `void resize(int count)`：改变容器中元素的数量
 - `void resize(int count, const T& value)`：改变容器中元素的数量，不足的元素用`value`填充
 
 ```cpp
@@ -1238,8 +1238,8 @@ map<string, int> m5(m4);
 #### 容量和大小
 
 - `bool empty() const`：判断是否为空
-- `size_type size() const`：返回元素个数
-- `size_type max_size() const`：返回最大可能元素数量的理论值
+- `int size() const`：返回元素个数
+- `int max_size() const`：返回最大可能元素数量的理论值
 
 ```cpp
 map<string, int> fruits = {{"apple", 5}, {"banana", 3}};
@@ -1256,7 +1256,7 @@ cout << "理论最大容量: " << fruits.max_size() << endl;  // 输出一个很
 - `T& operator[](const Key& key)`：通过键访问值，如果键不存在则插入
 - `T& at(const Key& key)`：通过键访问值，如果键不存在则抛出异常
 - `iterator find(const Key& key)`：查找键为`key`的元素
-- `size_type count(const Key& key) const`：返回键为`key`的元素个数
+- `int count(const Key& key) const`：返回键为`key`的元素个数
 - `iterator lower_bound(const Key& key)`：返回第一个键不小于`key`的元素
 - `iterator upper_bound(const Key& key)`：返回第一个键大于`key`的元素
 - `pair<iterator,iterator> equal_range(const Key& key)`：返回键等于`key`的范围
@@ -1305,7 +1305,7 @@ for (auto i = range.first; i != range.second; ++i) {
 - `iterator insert(iterator hint, const value_type& value)`：带提示插入
 - `void erase(iterator pos)`：删除pos位置的元素
 - `void erase(iterator first, iterator last)`：删除迭代器范围内的元素
-- `size_type erase(const Key& key)`：删除键为key的元素，返回删除元素个数
+- `int erase(const Key& key)`：删除键为key的元素，返回删除元素个数
 - `void swap(set& other)`：交换两个容器
 - `void clear()`：清空容器
 
@@ -1358,4 +1358,95 @@ for (auto it = range.first; it != range.second; ++it) {
 // 2. 统计相同键的数量
 cout << "apple出现次数: " << fruits.count("apple") << endl;  // 输出: 2
 ```
+
+### 函数对象
+
+**函数对象(Function Object)**，也称为**仿函数(Functor)**，本质上是一个类对象，重载了函数调用运算符`operator()`，使得对象可以像函数一样被调用
+
+函数对象有如下优势：
+
+- **可以保持状态：**与普通函数不同，函数对象可以在调用之间保持状态
+- **灵活性：**可以作为参数传递给其他函数
+- **效率：**编译器可以更好地优化函数对象
+
+```cpp
+class MyPrint {
+public:
+    MyPrint() { this->count = 0; }
+    void operator()(string test) {
+        cout << test <<endl;
+    }
+
+    int count;
+};
+
+int main() {
+    MyPrint myPrint;  // 创建函数对象
+    for (int i = 0; i < 4; i++) {
+        myPrint("I love coding!");
+    }
+
+    cout << myPrint.count << endl;
+
+    return 0;
+}
+```
+
+**Lambda表达式**是C++11引入的一个重要特性，提供了一种简洁的方式来创建**匿名函数对象**（也称为**闭包**）。Lambda可以捕获作用域中的变量，并像普通函数一样被调用
+
+- `capture`：捕获列表，指定哪些外部变量可以在lambda体内使用
+- `parameters`：参数列表，与普通函数的参数列表类似
+- `return_type`：返回类型（可以省略，编译器会自动推导）
+- `{}`：函数体
+
+```cpp
+[capture](parameters) -> return_type { 
+    // 函数体
+}
+```
+
+编译器会将lambda表达式转换为一个匿名类的函数对象，例如：
+
+```
+auto lambda = [](int x) { return x * 2; };
+```
+
+会被转换成类似：
+
+```cpp
+class __AnonymousClass {
+public:
+    int operator()(int x) const { return x * 2; }
+};
+```
+
+#### Lambda捕获变量
+
+Lambda可以通过捕获列表访问外部变量
+
+- 值捕获：创建变量的副本
+
+  ```cpp
+  int x = 10;
+  auto lambda = [x]() { cout << x << endl; };
+  ```
+
+- 引用捕获：通过引用访问变量
+
+  ```cpp
+  int y = 20;
+  auto lambda = [&y]() { y++; };
+  lambda();
+  
+  cout << y << endl; // 21
+  ```
+
+- 值捕获的变量在Lambda内是`const`的，使用`mutable`关键字可以修改值捕获的变量
+
+  ```cpp
+  int count = 0;
+  auto increment = [count]() mutable { return ++count; };
+  ```
+
+#### 谓词
 
