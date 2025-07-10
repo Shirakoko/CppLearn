@@ -1456,8 +1456,67 @@ Lambda可以通过捕获列表访问外部变量
 2. 一个重载了`operator()`并返回`bool`的函数对象
 3. 一个返回`bool`的Lambda表达式
 
-**一元谓词(Unary Predicate)**是接收一个参数并返回`bool`的谓词，**二元谓词(Binary Predicate)**是接收两个参数并返回`bool`的谓词，谓词在STL算法中广泛使用，具有以下特征：
+**一元谓词(Unary Predicate)**是接收一个参数并返回`bool`的谓词
+
+```cpp
+bool is_positive(int x) {
+    return x > 0;
+}
+
+vector<int> v = { -2, -1, 0, 1, 2 };
+auto it = find_if(v.begin(), v.end(), is_positive); // it指向1
+```
+
+**二元谓词(Binary Predicate)**是接收两个参数并返回`bool`的谓词
+
+```cpp
+bool compare(int a, int b) {
+    return a > b;  // 降序排序
+}
+
+vector<int> v = { 3, 1, 4, 2 };
+sort(v.begin(), v.end(), compare); // v变为 {4, 3, 2, 1}
+```
+
+谓词在STL算法中广泛使用，具有以下特征：
 
 1. **纯函数性**：谓词通常应该是**无状态**的，或者状态不影响结果
 2. **不修改参数**：谓词通常不应该修改其参数
 3. **性能**：简单的谓词通常会被编译器内联，性能很好
+
+#### 内建函数对象
+
+C++ 标准库在 `<functional>` 头文件中提供了一系列预定义的函数对象，主要包括算术运算、关系比较和逻辑运算三类。这些函数对象都是模板类，可以与 STL 算法完美配合。
+
+- 算数函数对象
+
+  ```cpp
+  // 二元算术运算
+  plus<int>()        // 加法：a + b
+  minus<int>()       // 减法：a - b
+  multiplies<int>()  // 乘法：a * b
+  divides<int>()     // 除法：a / b
+  modulus<int>()     // 取模：a % b
+  
+  // 一元算术运算
+  negate<int>()      // 取负：-a
+  ```
+
+- 关系函数对象
+
+  ```cpp
+  equal_to<int>()       // a == b
+  not_equal_to<int>()   // a != b
+  greater<int>()        // a > b
+  less<int>()           // a < b
+  greater_equal<int>()   // a >= b
+  less_equal<int>()      // a <= b
+  ```
+
+- 逻辑函数对象
+
+  ```cpp
+  logical_and<bool>()   // a && b
+  logical_or<bool>()    // a || b
+  logical_not<bool>()   // !a
+  ```
