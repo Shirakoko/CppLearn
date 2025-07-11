@@ -1520,3 +1520,13 @@ C++ 标准库在 `<functional>` 头文件中提供了一系列预定义的函数
   logical_or<bool>()    // a || b
   logical_not<bool>()   // !a
   ```
+
+### STL常用算法
+
+STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
+
+- `<algorithm>`：所有STL头文件中最大的一个，涉及比较、交换、查找、遍历、复制、修改。
+
+- `<numeric>`：体积较小，只包含简单数学运算的模板函数
+
+- `<funcional>`：定义一些模板类，用以声明函数对象
