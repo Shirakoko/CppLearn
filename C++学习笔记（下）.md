@@ -1530,3 +1530,68 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
 - `<numeric>`：体积较小，只包含简单数学运算的模板函数
 
 - `<funcional>`：定义一些模板类，用以声明函数对象
+
+#### 遍历
+
+- `UnaryFunction for_each(InputIt first, InputIt last, UnaryFunction f)`：对容器中的每个元素应用操作
+
+  ```cpp
+  vector<int> v{ 1, 2, 3, 4, 5 };
+  for_each(v.begin(), v.end(), [](int x) { cout << x << " "; });
+  ```
+
+- `OutputIt transform(InputIt first1, InputIt last1, OutputIt d_first, UnaryOperation unary_op)`：对范围内的每个元素应用操作，并将结果储存在另一个范围中
+
+  ```cpp
+  vector<int> v{ 1, 2, 3, 4, 5 };
+  vector<int> result(v.size());
+  transform(v.begin(), v.end(), result.begin(), [](int x) { return x * x; });
+  ```
+
+#### 查找
+
+- `InputIt find(InputIt first, InputIt last, const T& value)`：在范围内查找值等于`value`的第一个元素
+
+  ```cpp
+  vector<int> v{ 1, 2, 3, 4, 5 };
+  auto it = find(v.begin(), v.end(), 3);
+  ```
+
+- `InputIt find_if(InputIt first, InputIt last, UnaryPredicate p)`：查找满足谓词`p`的第一个元素
+
+  ```cpp
+  vector<int> v{ 1, 2, 3, 4, 5 };
+  auto it = find_if(v.begin(), v.end(), [](int x)->bool { return x > 3; });
+  ```
+
+- `ForwardIt adjacent_find(ForwardIt first, ForwardIt last)`：查找相邻的重复元素
+
+  ```cpp
+  vector<int> v{ 1, 2, 2, 3, 4 };
+  auto it = adjacent_find(v.begin(), v.end()); // 指向第一个2
+  ```
+
+- `bool binary_search(ForwardIt first, ForwardIt last, const T& value)`：在已知范围内进行二分查找，容器必须是有序序列
+
+  ```cpp
+  vector<int> v{ 1, 2, 3, 4, 5 };
+  bool found = binary_search(v.begin(), v.end(), 3); // true
+  ```
+
+- `int count(InputIt first, InputIt last, const T& value)`：计算范围内值等于`value`的元素个数
+
+  ```cpp
+  vector<int> v{ 1, 2, 2, 4, 5 };
+  int cnt = count(v.begin(), v.end(), 2)
+  ```
+
+- `int count_if(InputIt first, InputIt last, UnaryPredicate p)`：计算范围内满足谓词`p`的元素个数
+
+  ```cpp
+  vector<int> v{ 1, 2, 3, 4, 5 };
+  int even_cnt = count_if(v.begin(), v.end(), [](int x) { return x % 2 == 0; });
+  ```
+
+#### 排序
+
+#### 拷贝和替换
