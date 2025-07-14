@@ -1594,4 +1594,70 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
 
 #### 排序
 
+- `void sort(RandomIt first, RandomIt last)`：对范围进行升序排序（默认使用`<`比较）
+
+  ```cpp
+  vector<int> v{5, 3, 1, 4, 2};
+  sort(v.begin(), v.end()); // v变为{1, 2, 3, 4, 5}
+  ```
+
+- `void sort(RandomIt first, RandomIt last, Compare comp)`：使用自定义比较函数排序
+
+  ```cpp
+  vector<int> v{5, 3, 1, 4, 2};
+  sort(v.begin(), v.end(), greater<int>()); // 降序排序 v变为{5, 4, 3, 2, 1}
+  ```
+
+- `void stable_sort(RandomIt first, RandomIt last)`：稳定排序（保持相等元素的相对顺序）
+
+  ```cpp
+  vector<pair<int, int>> v{{1, 2}, {3, 1}, {1, 1}};
+  stable_sort(v.begin(), v.end()); // 保持{1,2}和{1,1}的原始顺序
+  ```
+
+- `bool is_sorted(ForwardIt first, ForwardIt last)`：检查范围是否已排序
+
+  ```cpp
+  vector<int> v{1, 3, 5};
+  bool sorted = is_sorted(v.begin(), v.end()); // true
+  ```
+
+- `void random_shuffle(RandomIt first, RandomIt last)`：随机打乱范围元素
+
+  ```cpp
+  vector<int> v{1, 2, 3, 4, 5};
+  random_shuffle(v.begin(), v.end()); // 可能得到{3,1,5,2,4}
+  ```
+
+- `void shuffle(RandomIt first, RandomIt last, URNG&& g)`：使用随机数引擎打乱元素（更推荐）
+
+  ```cpp
+  vector<int> v{1, 2, 3, 4, 5};
+  random_device rd;
+  mt19937 g(rd());
+  shuffle(v.begin(), v.end(), g);
+  ```
+
+- `OutputIt merge(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, OutputIt d_first)`：合并两个已排序范围
+
+  ```cpp
+  vector<int> v1{1, 3, 5}, v2{2, 4, 6}, result(6);
+  merge(v1.begin(), v1.end(), v2.begin(), v2.end(), result.begin());
+  // result变为{1,2,3,4,5,6}
+  ```
+
+- `void reverse(BidirectionalIt first, BidirectionalIt last)`：反转范围内的元素顺序
+
+  ```cpp
+  vector<int> v{1, 2, 3, 4, 5};
+  reverse(v.begin(), v.end()); // v变为{5,4,3,2,1}
+  ```
+
+- `void partial_sort(RandomIt first, RandomIt middle, RandomIt last)`：部分排序（前N个元素有序）
+
+  ```cpp
+  vector<int> v{5, 3, 1, 4, 2};
+  partial_sort(v.begin(), v.begin()+3, v.end()); // 前3个最小元素有序，v可能变为{1,2,3,5,4}
+  ```
+
 #### 拷贝和替换
