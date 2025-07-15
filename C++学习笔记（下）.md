@@ -1758,4 +1758,11 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
   int sum = accumulate(nums.begin(), nums.end(), 0); // sum为15
   ```
 
-- `T accumulate(InputIt first, InputIt last, T init, BinaryOp op)`：自定义
+- `T accumulate(InputIt first, InputIt last, T init, BinaryOp op)`：积累范围内的元素，二元操作函数`op`为自定义累加操作（如累乘、字符串拼接）
+
+  ```cpp
+  vector<int> nums{1, 2, 3, 4, 5};
+  int product = accumulate(nums.begin(), nums.end(), 1, multiplies<int>()); // product为120
+  ```
+
+  
