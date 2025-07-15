@@ -1662,7 +1662,7 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
 
 #### 拷贝
 
-- `OutputIt copy(InputIt first, InputIt last, OutputIt d_first)`：将 `[first, last)`范围内的元素拷贝到 `d_first`开始的目标位置
+- `OutputIt copy(InputIt first, InputIt last, OutputIt d_first)`：将 `[first, last)`范围内的元素拷贝到`d_first`开始的目标位置
 
   ```cpp
   vector<int> src{1, 2, 3, 4, 5};
@@ -1670,7 +1670,7 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
   copy(src.begin(), src.end(), dst.begin()); // dst = {1, 2, 3, 4, 5}
   ```
 
-- `OutputIt copy_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p)`：仅拷贝满足谓词 `p`的元素
+- `OutputIt copy_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p)`：仅拷贝满足谓词`p`的元素
 
   ```cpp
   vector<int> src{1, 2, 3, 4, 5};
@@ -1678,7 +1678,7 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
   copy_if(src.begin(), src.end(), back_inserter(dst), [](int x) { return x % 2 == 0; }); // dst = {2, 4}（使用back_inserter自动扩容）
   ```
 
-- `OutputIt copy_n(InputIt first, Size count, OutputIt result)`：从 `first`开始拷贝 `count`个元素到 `result`
+- `OutputIt copy_n(InputIt first, Size count, OutputIt result)`：从`first`开始拷贝`count`个元素到`result`
 
   ```cpp
   vector<int> src{1, 2, 3, 4, 5};
@@ -1688,13 +1688,74 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
 
 #### 替换
 
-- `void replace(ForwardIt first, ForwardIt last, const T& old_value, const T& new_value)`：将范围内所有等于 `old_value`的元素替换为 `new_value`
+- `void replace(ForwardIt first, ForwardIt last, const T& old_value, const T& new_value)`：将范围内所有等于`old_value`的元素替换为`new_value`
 
   ```cpp
   vector<int> v{1, 2, 3, 2, 5};
   replace(v.begin(), v.end(), 2, 99); // v = {1, 99, 3, 99, 5}
   ```
 
-- `void replace_if(ForwardIt first, ForwardIt last, UnaryPredicate p, const T& new_value)`：将满足谓词 `p`的所有元素替换为 `new_value`
+- `void replace_if(ForwardIt first, ForwardIt last, UnaryPredicate p, const T& new_value)`：将满足谓词`p`的所有元素替换为new_value`
 
+  ```cpp
+  vector<int> v{1, 2, 3, 4, 5};
+  replace_if(v.begin(), v.end(), [](int x) { return x < 3; }, 0); // v = {0, 0, 3, 4, 5}
+  ```
   
+- `OutputIt replace_copy(InputIt first, InputIt last, OutputIt d_first, const T& old_value, const T& new_value)`：拷贝范围并替换 `old_value`为 `new_value`（原范围不变）
+
+  ```cpp
+  vector<int> src{1, 2, 3, 2, 5};
+  vector<int> dst(5);
+  replace_copy(src.begin(), src.end(), dst.begin(), 2, 99); // src不变，dst = {1, 99, 3, 99, 5}
+  ```
+  
+- `OutputIt replace_copy_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p, const T& new_value)`：拷贝范围并替换满足谓词`p`的元素（原范围不变）
+
+  ```cpp
+  vector<int> src{1, 2, 3, 4, 5};
+  vector<int> dst;
+  replace_copy_if(src.begin(), src.end(), back_inserter(dst), [](int x) { return x % 2 == 0; }, 0); // src不变，dst = {1, 0, 3, 0, 5}
+  ```
+
+#### 交换
+
+- `void swap(T& a, T& b)`：交换两个元素的值（交换容器内容只需交换内部指针）
+
+  ```cpp
+  vector<int> v1{1, 2, 3};
+  vector<int> v2{4, 5, 6};
+  swap(v1, v2);  // 交换两个容器的内容
+  ```
+
+- `ForwardIt2 swap_ranges(ForwardIt1 first1, ForwardIt1 last1, ForwardIt2 first2)`：交换两个范围的元素（范围长度必须相同）
+
+  ```cpp
+  vector<int> v1{1, 2, 3}, v2{4, 5, 6};
+  swap_ranges(v1.begin(), v1.end(), v2.begin());
+  ```
+
+#### 算数生成算法
+
+- `void fill(ForwardIt first, ForwardIt last, const T& value)`：将范围填充为`value`
+
+  ```cpp
+  vector<int> v(5);
+  fill(v.begin(), v.end(), 42); // v = {42, 42, 42, 42, 42}
+  ```
+
+- `OutputIt fill_n(OutputIt first, Size count, const T& value)`：从`first`开始填充`count`个 `value`
+
+  ```cpp
+  vector<int> v(5);
+  fill_n(v.begin(), 3, 10); // v = {10, 10, 10, 0, 0}
+  ```
+
+- `T accumulate(InputIt first, InputIt last, T init)`：累加范围内的所有元素
+
+  ```cpp
+  vector<int> nums{1, 2, 3, 4, 5};
+  int sum = accumulate(nums.begin(), nums.end(), 0); // sum为15
+  ```
+
+- `T accumulate(InputIt first, InputIt last, T init, BinaryOp op)`：自定义
