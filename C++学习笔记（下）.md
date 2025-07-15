@@ -1660,4 +1660,41 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
   partial_sort(v.begin(), v.begin()+3, v.end()); // 前3个最小元素有序，v可能变为{1,2,3,5,4}
   ```
 
-#### 拷贝和替换
+#### 拷贝
+
+- `OutputIt copy(InputIt first, InputIt last, OutputIt d_first)`：将 `[first, last)`范围内的元素拷贝到 `d_first`开始的目标位置
+
+  ```cpp
+  vector<int> src{1, 2, 3, 4, 5};
+  vector<int> dst(5); // 必须提前分配空间
+  copy(src.begin(), src.end(), dst.begin()); // dst = {1, 2, 3, 4, 5}
+  ```
+
+- `OutputIt copy_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p)`：仅拷贝满足谓词 `p`的元素
+
+  ```cpp
+  vector<int> src{1, 2, 3, 4, 5};
+  vector<int> dst;
+  copy_if(src.begin(), src.end(), back_inserter(dst), [](int x) { return x % 2 == 0; }); // dst = {2, 4}（使用back_inserter自动扩容）
+  ```
+
+- `OutputIt copy_n(InputIt first, Size count, OutputIt result)`：从 `first`开始拷贝 `count`个元素到 `result`
+
+  ```cpp
+  vector<int> src{1, 2, 3, 4, 5};
+  vector<int> dst(3);
+  copy_n(src.begin(), 3, dst.begin()); // dst = {1, 2, 3}
+  ```
+
+#### 替换
+
+- `void replace(ForwardIt first, ForwardIt last, const T& old_value, const T& new_value)`：将范围内所有等于 `old_value`的元素替换为 `new_value`
+
+  ```cpp
+  vector<int> v{1, 2, 3, 2, 5};
+  replace(v.begin(), v.end(), 2, 99); // v = {1, 99, 3, 99, 5}
+  ```
+
+- `void replace_if(ForwardIt first, ForwardIt last, UnaryPredicate p, const T& new_value)`：将满足谓词 `p`的所有元素替换为 `new_value`
+
+  
