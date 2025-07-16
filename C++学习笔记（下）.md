@@ -1735,7 +1735,7 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
   swap_ranges(v1.begin(), v1.end(), v2.begin());
   ```
 
-#### 算数生成算法
+#### 算数生成
 
 - `void fill(ForwardIt first, ForwardIt last, const T& value)`：将范围填充为`value`
 
@@ -1763,6 +1763,70 @@ STL算法主要由头文件`<algorithm>`、`<functional>`、`<numeric>`组成：
   ```cpp
   vector<int> nums{1, 2, 3, 4, 5};
   int product = accumulate(nums.begin(), nums.end(), 1, multiplies<int>()); // product为120
+  ```
+
+
+#### 集合算法
+
+C++ `<algorithm>`提供了一系列集合操作算法，适用于**有序序列**（如 `set`、排序后的`vector`）。这些算法的时间复杂度通常为 *O(n)*，要求输入范围已排序。如果传入了无序序列，会抛出“sequence not ordered"异常。
+
+- `OutputIt set_intersection(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, OutputIt d_first)`：求两个有序范围的交集，返回目标容器中交集序列的末尾的下一个位置
+
+  ```cpp
+  vector<int> v1{ 1, 2, 3, 4, 5 };
+  vector<int> v2{ 3, 4, 5, 6, 7 };
+  vector<int> result;
+  
+  set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(result)); // result = {3, 4, 5}
+  ```
+  
+- `OutputIt set_union(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, OutputIt d_first)`：求两个有序范围的并集，若元素在多个集合中重复出现，输出中会保留最大出现次数，返回目标容器中并集序列的末尾的下一个位置
+
+  ```cpp
+  vector<int> v1{ 1, 2, 2 };
+  vector<int> v2{ 2, 3, 4 };
+  vector<int> result;
+  
+  set_union(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(result)); // result = {1, 2, 2, 3, 4}
+  ```
+  
+- `OutputIt set_difference(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, OutputIt d_first)`：求两个有序范围的差集（第一个范围有二第二个范围没有的元素集合），返回目标容器中差集序列的末尾的下一个位置
+
+  ```cpp
+  vector<int> v1{1, 2, 3, 4, 5};
+  vector<int> v2{3, 4, 5, 6};
+  vector<int> result;
+  
+  set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(result)); // result = {1, 2}
+  ```
+
+- `OutputIt set_symmetric_difference(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, OutputIt d_first)`：计算两个有序范围的对称差集（仅存在于一个集合中的元素），返回目标容器中对称差集序列的末尾的下一个位置
+
+  ```cpp
+  vector<int> v1{1, 2, 3};
+  vector<int> v2{2, 3, 4};
+  vector<int> result;
+  
+  set_symmetric_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(result)); // result = {1, 4}
+  ```
+
+- `bool includes(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2)`：检查一个有序范围是否包含另一个有序范围的所有元素
+
+  ```cpp
+  vector<int> v1{1, 2, 3, 4, 5};
+  vector<int> v2{2, 3};
+  
+  bool is_subset = includes(v1.begin(), v1.end(), v2.begin(), v2.end()); // is_subset = true
+  ```
+
+- `OutputIt merge(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, OutputIt d_first)`：合并两个有序范围，返回目标容器中新序列末尾的下一个位置
+
+  ```cpp
+  vector<int> v1{1, 3, 5};
+  vector<int> v2{2, 4, 6};
+  vector<int> result;
+  
+  merge(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(result)); // result = {1, 2, 3, 4, 5, 6}
   ```
 
   
